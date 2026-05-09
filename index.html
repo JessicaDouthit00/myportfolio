@@ -31,16 +31,20 @@
     html, body { margin: 0; height: 100%; }
 
     @keyframes bgShift {
-      0%   { background-position: 0% 50%; }
-      50%  { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+      0%   { background-color: #000000; }
+      14%  { background-color: #050d1a; }
+      28%  { background-color: #0d1a35; }
+      42%  { background-color: #1a0533; }
+      56%  { background-color: #2a0845; }
+      70%  { background-color: #0d0a2e; }
+      84%  { background-color: #050d1a; }
+      100% { background-color: #000000; }
     }
 
     #root {
       min-height: 100vh;
-      background: linear-gradient(-45deg, #000000, #050d1a, #0a0520, #0d1a2e, #130824, #050d1a, #000000);
-      background-size: 400% 400%;
-      animation: bgShift 18s ease infinite;
+      background-color: #000000;
+      animation: bgShift 24s ease-in-out infinite;
       color: #ffffff;
       font-family: var(--mono);
       overflow-x: hidden;
