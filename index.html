@@ -5,86 +5,404 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Jessica Douthit | Portfolio</title>
 
-  <!-- React and Babel -->
   <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-  <!-- Tailwind CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 
   <style>
-    @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+    *, *::before, *::after { box-sizing: border-box; }
+
+    :root {
+      --bg: #050d1a;
+      --bone: #ffffff;
+      --bone2: #e8f0ff;
+      --accent: #2a6dd9;
+      --accent2: #6aaef5;
+      --dim: rgba(255,255,255,0.12);
+      --border: rgba(255,255,255,0.18);
+      --text-muted: rgba(255,255,255,0.55);
+      --serif: 'Cormorant Garamond', Georgia, serif;
+      --mono: 'DM Mono', 'Courier New', monospace;
     }
 
-    html, body {
-      margin: 0;
-      height: 100%;
-    }
+    html, body { margin: 0; height: 100%; }
 
     #root {
-      height: 100vh;
-      background: linear-gradient(270deg, #a855f7, #ec4899, #ef4444);
-      background-size: 600% 600%;
-      animation: gradientShift 15s ease infinite;
-      overflow: auto;
+      min-height: 100vh;
+      background: var(--bg);
+      color: #ffffff;
+      font-family: var(--mono);
+      overflow-x: hidden;
+      overflow-y: auto;
+      position: relative;
     }
 
-    .edu-box {
-      background: rgba(255, 255, 255, 0.12);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      border-radius: 1rem;
-      transition: background 0.2s;
-    }
-    .edu-box:hover {
-      background: rgba(255, 255, 255, 0.2);
-    }
-
-    .photo-grid img {
-      object-fit: cover;
+    /* ─── Animated canvas background ─── */
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
       width: 100%;
       height: 100%;
-      border-radius: 0.75rem;
-      display: block;
+      z-index: 0;
+      pointer-events: none;
     }
 
-    .logo-placeholder {
-      width: 56px;
-      height: 56px;
-      min-width: 56px;
-      border-radius: 0.5rem;
-      background: rgba(255,255,255,0.15);
-      border: 2px dashed rgba(255,255,255,0.4);
+    /* Everything above canvas */
+    #app-root {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ─── Subtle top accent line ─── */
+    #root::after {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent2), #a8d4ff, var(--accent2), transparent);
+      z-index: 9998;
+    }
+
+    @keyframes orb1 {
+      0%   { transform: translate(0, 0) scale(1); }
+      33%  { transform: translate(60px, -40px) scale(1.08); }
+      66%  { transform: translate(-30px, 50px) scale(0.95); }
+      100% { transform: translate(0, 0) scale(1); }
+    }
+    @keyframes orb2 {
+      0%   { transform: translate(0, 0) scale(1); }
+      40%  { transform: translate(-70px, 60px) scale(1.1); }
+      80%  { transform: translate(40px, -30px) scale(0.92); }
+      100% { transform: translate(0, 0) scale(1); }
+    }
+    @keyframes orb3 {
+      0%   { transform: translate(0, 0) scale(1); }
+      50%  { transform: translate(50px, 40px) scale(1.05); }
+      100% { transform: translate(0, 0) scale(1); }
+    }
+
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(90px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .orb1 {
+      width: 520px; height: 520px;
+      top: -120px; left: -100px;
+      background: radial-gradient(circle, rgba(30,80,200,0.28) 0%, transparent 70%);
+      animation: orb1 18s ease-in-out infinite;
+    }
+    .orb2 {
+      width: 440px; height: 440px;
+      bottom: -80px; right: -80px;
+      background: radial-gradient(circle, rgba(20,60,160,0.22) 0%, transparent 70%);
+      animation: orb2 22s ease-in-out infinite;
+    }
+    .orb3 {
+      width: 300px; height: 300px;
+      top: 45%; left: 55%;
+      background: radial-gradient(circle, rgba(80,140,255,0.12) 0%, transparent 70%);
+      animation: orb3 14s ease-in-out infinite;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate { animation: fadeUp 0.55s cubic-bezier(.22,.68,0,1.1) both; }
+    .d1 { animation-delay: .05s; }
+    .d2 { animation-delay: .15s; }
+    .d3 { animation-delay: .25s; }
+    .d4 { animation-delay: .35s; }
+    .d5 { animation-delay: .45s; }
+    .d6 { animation-delay: .55s; }
+
+    /* ─── Back button ─── */
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 22px;
+      border: 1px solid rgba(255,255,255,0.65);
+      background: transparent;
+      color: var(--bone);
+      font-family: var(--mono);
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: background 0.18s, border-color 0.18s;
+      margin-bottom: 2.5rem;
+    }
+    .back-btn:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.95);
+    }
+
+    /* ─── Section label ─── */
+    .sl {
+      font-family: var(--mono);
+      font-size: 13px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 0.6rem;
+    }
+
+    /* ─── Glassmorphism card ─── */
+    .glass {
+      background: rgba(255,255,255,0.04);
+      border: 0.5px solid var(--border);
+      border-radius: 4px;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .glass:hover {
+      background: rgba(255,255,255,0.07);
+      border-color: rgba(255,255,255,0.22);
+    }
+
+    /* ─── Skill pill ─── */
+    .skill-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7px 18px;
+      border: 1px solid rgba(106,174,245,0.6);
+      background: rgba(42,109,217,0.15);
+      color: #ffffff;
+      font-family: var(--mono);
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      border-radius: 2px;
+      transition: background 0.18s, transform 0.15s;
+    }
+    .skill-pill:hover {
+      background: rgba(42,109,217,0.28);
+      transform: translateY(-2px);
+    }
+
+    /* ─── Experience card (left list) ─── */
+    .exp-card {
+      padding: 1.2rem 1.4rem;
+      border: 0.5px solid var(--border);
+      background: rgba(255,255,255,0.02);
+      border-radius: 3px;
+      cursor: pointer;
+      transition: background 0.18s, border-color 0.18s;
+      position: relative;
+    }
+    .exp-card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 2px;
+      background: transparent;
+      border-radius: 0;
+      transition: background 0.2s;
+    }
+    .exp-card.active::before,
+    .exp-card:hover::before {
+      background: var(--accent2);
+    }
+    .exp-card.active {
+      background: rgba(42,109,217,0.1);
+      border-color: rgba(106,174,245,0.4);
+    }
+    .exp-card:hover {
+      background: rgba(255,255,255,0.04);
+    }
+
+    /* ─── Project tile ─── */
+    .proj-tile {
+      width: 200px;
+      height: 200px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 10px;
-      color: rgba(255,255,255,0.6);
       text-align: center;
-      overflow: hidden;
+      font-family: var(--mono);
+      font-size: 14px;
+      line-height: 1.6;
+      letter-spacing: 0.04em;
+      border: 1px solid rgba(255,255,255,0.45);
+      background: rgba(255,255,255,0.02);
+      border-radius: 3px;
+      cursor: pointer;
+      text-decoration: none;
+      color: var(--bone);
+      padding: 1.2rem;
+      transition: background 0.18s, border-color 0.18s, transform 0.18s;
     }
-    .logo-placeholder img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      border-radius: 0.4rem;
+    .proj-tile:hover {
+      background: rgba(42,109,217,0.15);
+      border-color: rgba(106,174,245,0.7);
+      transform: translateY(-4px);
     }
 
-    .section-label {
-      font-size: 0.7rem;
-      letter-spacing: 0.2em;
+    /* ─── Edu box ─── */
+    .edu-box {
+      padding: 1.4rem 1.6rem;
+      border: 0.5px solid var(--border);
+      background: rgba(255,255,255,0.03);
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+    .edu-box:hover {
+      background: rgba(255,255,255,0.06);
+    }
+
+    .logo-ph {
+      width: 52px;
+      height: 52px;
+      min-width: 52px;
+      border-radius: 3px;
+      border: 0.5px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.06);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo-ph img {
+      width: 100%; height: 100%;
+      object-fit: contain;
+    }
+
+    .pill-date {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      padding: 4px 12px;
+      border: 0.5px solid rgba(106,174,245,0.5);
+      background: rgba(42,109,217,0.12);
+      color: var(--accent2);
+      border-radius: 2px;
+      margin-top: 8px;
+    }
+
+    /* ─── Photo grid ─── */
+    .photo-cell {
+      border-radius: 3px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.05);
+      border: 0.5px solid var(--border);
+    }
+    .photo-cell img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* ─── Link button ─── */
+    .link-btn {
+      display: block;
+      padding: 10px 22px;
+      border: 1px solid rgba(255,255,255,0.6);
+      background: transparent;
+      color: var(--bone);
+      font-family: var(--mono);
+      font-size: 13px;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      opacity: 0.7;
-      margin-bottom: 0.5rem;
+      text-decoration: none;
+      text-align: center;
+      border-radius: 2px;
+      transition: background 0.18s, border-color 0.18s;
+    }
+    .link-btn:hover {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(106,174,245,0.9);
+    }
+
+    /* ─── Citation card ─── */
+    .citation-card {
+      background: rgba(255,255,255,0.03);
+      border: 0.5px solid var(--border);
+      border-radius: 4px;
+      padding: 1.8rem;
+      max-width: 840px;
+      margin: 0 auto 2.5rem;
+    }
+
+    /* ─── Scroll container ─── */
+    .page-wrap {
+      min-height: 100vh;
+      padding: 3rem clamp(1.5rem, 5vw, 5rem);
+    }
+
+    /* ─── Divider ─── */
+    .divider {
+      height: 0.5px;
+      background: var(--border);
+      margin: 2.5rem 0;
+    }
+
+    /* ─── Home layout ─── */
+    .home-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+    @media (min-width: 600px) {
+      .home-grid {
+        grid-template-columns: repeat(4, 1fr);
+        max-width: 640px;
+      }
+    }
+
+    .nav-tile {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      line-height: 1.6;
+      border: 1px solid rgba(255,255,255,0.5);
+      background: rgba(255,255,255,0.02);
+      cursor: pointer;
+      border-radius: 3px;
+      padding: 1rem;
+      transition: background 0.18s, border-color 0.18s, transform 0.15s;
+      color: var(--bone);
+    }
+    .nav-tile:hover {
+      background: rgba(42,109,217,0.15);
+      border-color: rgba(106,174,245,0.7);
+      transform: translateY(-3px);
+    }
+
+    /* pub row */
+    .proj-row {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    @media (min-width: 640px) {
+      .proj-row { flex-direction: row; }
     }
   </style>
 </head>
 <body>
-  <div id="root"></div>
+  <div id="root">
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+    <div id="app-root"></div>
+  </div>
 
   <script type="text/babel">
     const experiences = [
@@ -92,7 +410,7 @@
         title: "Applications Services Intern",
         company: "Johns Hopkins Applied Physics Laboratory",
         location: "Laurel, Maryland",
-        duration: "January May 2026 – Present",
+        duration: "Jan 2026 – Present",
         description: [
           "Design software as directed and collaborate with fellow members of the IAS Applications Group on the reconstruction of APL's software system"
         ],
@@ -117,9 +435,9 @@
         location: "Blacksburg, VA",
         duration: "May 2024 – Aug 2024",
         description: [
-          "Cleaned dataset containing over 23,000 observations via, and utilized ArcGIS to measure distance between each observation and the solar facility",
-          "Built a distance-decay hedonic model, conducted a heterogeneity analysis and an events study to verify the results",
-          "Developed an R Shiny web app to visualise results to stakeholders, co-authored an academic paper currently undergoing peer-review",
+          "Cleaned dataset containing over 23,000 observations via ArcGIS to measure distance between each observation and the solar facility.",
+          "Built a distance-decay hedonic model, conducted a heterogeneity analysis and an events study to verify the results.",
+          "Developed an R Shiny web app to visualise results to stakeholders, co-authored an academic paper currently undergoing peer-review.",
         ],
         skills: ["R", "ArcGIS", "Statistics", "Data Engineering", "Data Visualisation", "R Shiny", "Leaflet", "GG Plot"]
       }
@@ -127,63 +445,59 @@
 
     function ExperienceSection({ onBack }) {
       const [selectedIndex, setSelectedIndex] = React.useState(0);
-      const selectedExperience = experiences[selectedIndex];
+      const sel = experiences[selectedIndex];
+      const isVT = sel.company.includes("Virginia Tech");
 
       return (
-        <div className="flex flex-col w-full h-full p-8">
-          <button onClick={onBack} className="self-start mb-4 px-4 py-2 bg-white text-purple-700 font-semibold rounded shadow hover:bg-purple-100 transition">
-            ← Back
-          </button>
-          <div className="flex flex-col md:flex-row w-full h-full">
-            <div className="md:w-1/2 flex flex-col space-y-4">
-              {experiences.map((exp, index) => (
+        <div className="page-wrap">
+          <button onClick={onBack} className="back-btn">← Back</button>
+
+          <div className="sl animate d1">02 / Experience</div>
+          <h2 className="animate d2" style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(1.8rem, 4vw, 2.6rem)', fontWeight: 300, letterSpacing: '0.02em', marginTop: 0, marginBottom: '2.5rem', color: '#ffffff' }}>
+            Professional History
+          </h2>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
+            {/* Left: cards */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {experiences.map((exp, i) => (
                 <div
-                  key={index}
-                  onClick={() => setSelectedIndex(index)}
-                  className={`p-4 rounded-lg cursor-pointer transition transform hover:scale-105 shadow-lg ${
-                    selectedIndex === index ? "bg-purple-600 text-white" : "bg-white text-black"
-                  }`}
+                  key={i}
+                  className={`exp-card animate${i === 0 ? ' d3' : i === 1 ? ' d4' : ' d5'} ${selectedIndex === i ? 'active' : ''}`}
+                  onClick={() => setSelectedIndex(i)}
                 >
-                  <h3 className="text-xl font-semibold">{exp.title}</h3>
-                  <p className="text-sm">{exp.company} | {exp.location}</p>
-                  <p className="text-sm italic">{exp.duration}</p>
-                  <ul className="list-disc list-inside mt-2">
+                  <div style={{ fontFamily: 'var(--serif)', fontSize: '1.2rem', fontWeight: 400, color: '#ffffff', marginBottom: '4px' }}>
+                    {exp.title}
+                  </div>
+                  <div style={{ fontFamily: 'var(--mono)', fontSize: '13px', color: 'rgba(255,255,255,0.65)', letterSpacing: '0.06em', marginBottom: '8px' }}>
+                    {exp.company} · {exp.location}
+                  </div>
+                  <div style={{ fontFamily: 'var(--mono)', fontSize: '12px', color: 'var(--accent2)', letterSpacing: '0.1em' }}>{exp.duration}</div>
+                  <ul style={{ marginTop: '10px', paddingLeft: '1.2rem', display: 'flex', flexDirection: 'column', gap: '6px' }}>
                     {exp.description.map((item, idx) => (
-                      <li key={idx} className="text-sm">{item}</li>
+                      <li key={idx} style={{ fontFamily: 'var(--mono)', fontSize: '13px', color: 'rgba(255,255,255,0.85)', lineHeight: '1.75', letterSpacing: '0.02em' }}>{item}</li>
                     ))}
                   </ul>
                 </div>
               ))}
             </div>
-            <div className="md:w-1/2 mt-6 md:mt-0 md:ml-8">
-              <h3 className="text-2xl font-bold mb-4 text-white">Skills Used</h3>
-              <div className="flex flex-wrap gap-4 mb-6">
-                {selectedExperience.skills.map((skill, idx) => (
-                  <div
-                    key={idx}
-                    className="w-28 h-28 flex items-center justify-center bg-purple-200 text-purple-900 font-semibold text-center text-sm rounded-full shadow-md transition-transform duration-200 transform hover:scale-110"
-                  >
-                    {skill}
-                  </div>
+
+            {/* Right: skills */}
+            <div className="animate d6">
+              <div className="sl" style={{ marginBottom: '1rem' }}>Skills</div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '1.5rem' }}>
+                {sel.skills.map((s, i) => (
+                  <span key={i} className="skill-pill">{s}</span>
                 ))}
               </div>
-              {selectedExperience.title === "Data Science Intern" && selectedExperience.company.includes("Virginia Tech") && (
-                <div className="flex flex-col space-y-4">
-                  <a
-                    href="https://aaec.vt.edu/academics/undergraduate/dspg/team/2024.html"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-4 py-2 bg-white text-purple-700 font-semibold rounded shadow hover:bg-purple-100 transition text-center"
-                  >
-                    See more on Virginia Tech's website
+
+              {isVT && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '1rem', maxWidth: '320px' }}>
+                  <a href="https://aaec.vt.edu/academics/undergraduate/dspg/team/2024.html" target="_blank" rel="noopener noreferrer" className="link-btn">
+                    Virginia Tech Website ↗
                   </a>
-                  <a
-                    href="https://aaec-vt.shinyapps.io/dspg24PrinceGeorge/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-4 py-2 bg-white text-purple-700 font-semibold rounded shadow hover:bg-purple-100 transition text-center"
-                  >
-                    See my R Shiny Web App
+                  <a href="https://aaec-vt.shinyapps.io/dspg24PrinceGeorge/" target="_blank" rel="noopener noreferrer" className="link-btn">
+                    R Shiny Web App ↗
                   </a>
                 </div>
               )}
@@ -195,82 +509,54 @@
 
     function DataManagerProjects({ onBack }) {
       const projects = [
-        {
-          title: "Yoga Pose Visualisation Tool",
-          description: "A review tool for the yoga class at Berea College.",
-          link: "https://jessicadouthit00.github.io/yoga/"
-        },
-        {
-          title: "Preliminary Data Analysis",
-          description: "Preliminary data analysis done for faculty research on the physics of deadlifts.",
-          link: "https://jessica-douthit-0.shinyapps.io/preliminary/"
-        },
-        {
-          title: "Wellness Data Dashboard",
-          description: "Berea College's Department of Health and Human Performance recently consolidated two half-credit classes (Wellness 101 and Wellness 102) into a full-credit class, Wellness 150. After scraping the data from Moodle, I analyzed it via R to see if consolidation had an impact on student grades.",
-          link: "https://jessica-douthit-0.shinyapps.io/wellness/"
-        },
-        {
-          title: "Research Portal",
-          description: "This website allows potential subjects to sign up to participate in an ongoing URCPP catered to improve functionality and ease of movement for Bombsuit Operators.",
-          link: "https://jessicadouthit00.github.io/hhpresearch1/"
-        },
-        {
-          title: "FMS & RPE Analysis and Visualisation: Final Version",
-          description: "This visualises the results of our analysis for URCPP 799, and includes bar charts and overlapping bubble graphs.",
-          link: "https://jessica-douthit-0.shinyapps.io/StarExcursionTest/"
-        },
-        {
-          title: "FMS & RPE Analysis & Visualization: Preliminary Version",
-          description: "Interactive visualization tool for Functional Movement Screen and Rate of Perceived Exertion data analysis.",
-          link: "https://jessicadouthit00.github.io/fmsrpe-visualization/"
-        },
-        {
-          title: "URCPP 799 Project",
-          description: "An alternative visualisation and summary of the same study, designed for a presentation at Eastern Kentucky University.",
-          link: "https://jessicadouthit00.github.io/799/"
-        },
-        {
-          title: "VO2 Device Comparison Study",
-          description: "A website depicting the preliminary results of Dr. Mortara's research on the efficacy of different VO2 measurement devices.",
-          link: "https://jessicadouthit00.github.io/VO2/"
-        },
-        {
-          title: "Deadlift Systematic Review",
-          description: "A systematic review of an incomplete dataset meant to determine the number of additional subjects needed to render the study viable.",
-          link: "https://jessicadouthit00.github.io/DeadliftReview/"
-        }
+        { title: "Yoga Pose Visualisation Tool", description: "A review tool for the yoga class at Berea College.", link: "https://jessicadouthit00.github.io/yoga/" },
+        { title: "Preliminary Data Analysis", description: "Preliminary data analysis done for faculty research on the physics of deadlifts.", link: "https://jessica-douthit-0.shinyapps.io/preliminary/" },
+        { title: "Wellness Data Dashboard", description: "Analyzed impact of consolidating Wellness 101 and 102 into Wellness 150 on student grades, using scraped Moodle data processed in R.", link: "https://jessica-douthit-0.shinyapps.io/wellness/" },
+        { title: "Research Portal", description: "Allows subjects to sign up for an ongoing URCPP study improving functionality for Bombsuit Operators.", link: "https://jessicadouthit00.github.io/hhpresearch1/" },
+        { title: "FMS & RPE Analysis: Final", description: "Visualises results for URCPP 799, including bar charts and overlapping bubble graphs.", link: "https://jessica-douthit-0.shinyapps.io/StarExcursionTest/" },
+        { title: "FMS & RPE Analysis: Preliminary", description: "Interactive visualization for Functional Movement Screen and Rate of Perceived Exertion data.", link: "https://jessicadouthit00.github.io/fmsrpe-visualization/" },
+        { title: "URCPP 799 Project", description: "Alternative visualisation designed for a presentation at Eastern Kentucky University.", link: "https://jessicadouthit00.github.io/799/" },
+        { title: "VO2 Device Comparison Study", description: "Depicts preliminary results of Dr. Mortara's research on the efficacy of different VO2 measurement devices.", link: "https://jessicadouthit00.github.io/VO2/" },
+        { title: "Deadlift Systematic Review", description: "Systematic review to determine the number of additional subjects needed to render the study viable.", link: "https://jessicadouthit00.github.io/DeadliftReview/" }
       ];
 
       return (
-        <div className="h-full w-full p-6 text-white">
-          <button
-            onClick={onBack}
-            className="mb-6 px-4 py-2 bg-white text-purple-700 font-semibold rounded shadow hover:bg-purple-100 transition"
-          >
-            ← Back
-          </button>
-          <h2 className="text-3xl font-bold mb-10 text-center">Examples of Work</h2>
-          <p>*Due to FERPA and other privacy laws, the majority of my work as a Data Analyst is available only to Berea College Faculty</p>
-          <div className="flex flex-col space-y-6 mt-6">
-            {projects.map((project, index) => (
-              <div
-                key={index}
-                className="flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-6"
+        <div className="page-wrap">
+          <button onClick={onBack} className="back-btn">← Back</button>
+          <div className="sl animate d1">Work Samples</div>
+          <h2 className="animate d2" style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(1.8rem, 4vw, 2.6rem)', fontWeight: 300, marginTop: 0, marginBottom: '0.5rem', color: '#ffffff' }}>
+            Examples of Work
+          </h2>
+          <p className="animate d3" style={{ fontFamily: 'var(--mono)', fontSize: '13px', color: 'rgba(255,255,255,0.6)', letterSpacing: '0.05em', marginBottom: '2.5rem' }}>
+            * Due to FERPA and other privacy laws, the majority of my work as a Data Analyst is available only to Berea College Faculty.
+          </p>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1px', border: '0.5px solid var(--border)', borderRadius: '4px', overflow: 'hidden' }}>
+            {projects.map((p, i) => (
+              <a
+                key={i}
+                href={p.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'flex', alignItems: 'center', gap: '1.5rem', padding: '1rem 1.4rem',
+                  background: 'rgba(255,255,255,0.02)', textDecoration: 'none', color: '#ffffff',
+                  borderBottom: i < projects.length - 1 ? '0.5px solid var(--border)' : 'none',
+                  transition: 'background 0.15s',
+                }}
+                onMouseEnter={e => e.currentTarget.style.background = 'rgba(42,109,217,0.1)'}
+                onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.02)'}
+                className={`animate d${Math.min(i + 2, 6)}`}
               >
-                <a
-                  href={project.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-28 h-28 flex items-center justify-center rounded-full bg-black hover:bg-gray-700 text-white font-semibold text-center text-sm shadow-md transition-transform transform hover:scale-105"
-                >
-                  Project {index + 1}
-                </a>
-                <div className="max-w-prose">
-                  <h3 className="text-xl font-bold mb-1">{project.title}</h3>
-                  <p className="text-sm text-white">{project.description}</p>
+                <span style={{ fontFamily: 'var(--mono)', fontSize: '12px', color: 'var(--accent2)', minWidth: '24px', letterSpacing: '0.1em' }}>
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontFamily: 'var(--serif)', fontSize: '1.15rem', fontWeight: 400, marginBottom: '3px' }}>{p.title}</div>
+                  <div style={{ fontFamily: 'var(--mono)', fontSize: '12.5px', color: 'rgba(255,255,255,0.65)', lineHeight: '1.6' }}>{p.description}</div>
                 </div>
-              </div>
+                <span style={{ fontFamily: 'var(--mono)', fontSize: '13px', color: 'rgba(255,255,255,0.5)' }}>↗</span>
+              </a>
             ))}
           </div>
         </div>
@@ -278,88 +564,49 @@
     }
 
     function PersonalProjects({ onBack }) {
+      const projects = [
+        { label: "A small compiler for the C language", link: "https://github.com/JessicaDouthit00/C-Compiler" },
+        { label: "My Personal Training Website", link: "https://jessicadouthit00.github.io/personaltraining/" },
+        { label: "Berea Women's Club", link: "https://jessicadouthit00.github.io/womensclub/" },
+        { label: "Archivus", link: "https://www.youtube.com/watch?v=fyvA-8-e-CM" },
+        { label: "Spatial Analysis of DRC Conflict", link: "https://jessicadouthit00.github.io/DRC/" },
+        { label: "Lab-Controlled MITM Attack", link: "https://youtu.be/qzmH0izR6J0" },
+      ];
+
       return (
-        <div className="h-full w-full p-6 text-white">
-          <button
-            onClick={onBack}
-            className="mb-6 px-4 py-2 bg-white text-purple-700 font-semibold rounded shadow hover:bg-purple-100 transition"
-          >
-            ← Back
-          </button>
-          <h2 className="text-3xl font-bold mb-10 text-center">Personal Projects</h2>
-          <div className="flex flex-col md:flex-row justify-center items-center gap-8">
-            <a
-              href="https://github.com/JessicaDouthit00/C-Compiler"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-64 h-64 rounded-lg bg-black hover:bg-gray-700 cursor-pointer transition transform hover:scale-105 shadow-lg flex items-center justify-center text-center text-lg font-semibold p-4"
-            >
-              A small compiler for the C language
-            </a>
-            <a
-              href="https://jessicadouthit00.github.io/personaltraining/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-64 h-64 rounded-lg bg-black hover:bg-gray-700 cursor-pointer transition transform hover:scale-105 shadow-lg flex items-center justify-center text-center text-lg font-semibold p-4"
-            >
-              My Personal Training Website
-            </a>
-            <a
-              href="https://jessicadouthit00.github.io/womensclub/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-64 h-64 rounded-lg bg-black hover:bg-gray-700 cursor-pointer transition transform hover:scale-105 shadow-lg flex items-center justify-center text-center text-lg font-semibold p-4"
-            >
-              Berea Women's Club
-            </a>
-            <a
-              href="https://www.youtube.com/watch?v=fyvA-8-e-CM"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-64 h-64 rounded-lg bg-black hover:bg-gray-700 cursor-pointer transition transform hover:scale-105 shadow-lg flex items-center justify-center text-center text-lg font-semibold p-4"
-            >
-              Archivus
-            </a>
-            <a
-              href="https://jessicadouthit00.github.io/DRC/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-64 h-64 rounded-lg bg-black hover:bg-gray-700 cursor-pointer transition transform hover:scale-105 shadow-lg flex items-center justify-center text-center text-lg font-semibold p-4"
-            >
-              Spatial Analysis of DRC Conflict
-            </a>
-            <a
-              href="https://youtu.be/qzmH0izR6J0"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-64 h-64 rounded-lg bg-black hover:bg-gray-700 cursor-pointer transition transform hover:scale-105 shadow-lg flex items-center justify-center text-center text-lg font-semibold p-4"
-            >
-              Lab-Controlled MITM Attack
-            </a>
+        <div className="page-wrap">
+          <button onClick={onBack} className="back-btn">← Back</button>
+          <div className="sl animate d1">Personal Projects</div>
+          <h2 className="animate d2" style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(1.8rem, 4vw, 2.6rem)', fontWeight: 300, marginTop: 0, marginBottom: '2.5rem', color: '#ffffff' }}>
+            Independent Work
+          </h2>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
+            {projects.map((p, i) => (
+              <a key={i} href={p.link} target="_blank" rel="noopener noreferrer" className={`proj-tile animate d${Math.min(i + 2, 6)}`}>
+                {p.label}
+              </a>
+            ))}
           </div>
         </div>
       );
     }
 
-    /* ─── UPDATED Background & Education Section ─── */
     function BackgroundSection({ onBack }) {
-      //paths
       const photos = [
         { src: "images/photo1.jpg", alt: "Photo 1" },
         { src: "images/photo2.jpg", alt: "Photo 2" },
         { src: "images/photo3.jpg", alt: "Photo 3" },
         { src: "images/jessica.jpg", alt: "Photo 4" },
       ];
-
       const education = [
         {
-          logo: "images/jhu-logo.jpg",       
+          logo: "images/jhu-logo.jpg",
           school: "Johns Hopkins Whiting School of Engineering",
           degree: "Master of Science in Cybersecurity",
           duration: "Fall 2026 – Present",
         },
         {
-          logo: "images/berea-logo.jpg",      // replace with your Berea logo path
+          logo: "images/berea-logo.jpg",
           school: "Berea College",
           degree: "Bachelor of Science in Computer and Information Science",
           minor: "Double Minor in Philosophy and Law, Ethics, and Society",
@@ -368,108 +615,77 @@
       ];
 
       return (
-        <div className="w-full min-h-full p-8 text-white">
-          <button
-            onClick={onBack}
-            className="mb-8 px-4 py-2 bg-white text-purple-700 font-semibold rounded shadow hover:bg-purple-100 transition"
-          >
-            ← Back
-          </button>
+        <div className="page-wrap">
+          <button onClick={onBack} className="back-btn">← Back</button>
 
-          {/* ── Background ── */}
-          <section className="mb-14">
-            <p className="section-label text-white">01</p>
-            <h2 className="text-3xl font-bold mb-8">Background</h2>
+          {/* Background */}
+          <section style={{ marginBottom: '4rem' }}>
+            <div className="sl animate d1">01 / Background</div>
+            <h2 className="animate d2" style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(1.8rem, 4vw, 2.6rem)', fontWeight: 300, marginTop: 0, marginBottom: '2.5rem', color: '#ffffff' }}>
+              About Me
+            </h2>
 
-            <div className="flex flex-col md:flex-row gap-8 items-start">
-              {/* 2×2 photo grid */}
-              <div
-                className="photo-grid flex-shrink-0"
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gridTemplateRows: "1fr 1fr",
-                  gap: "12px",
-                  width: "320px",
-                  height: "320px",
-                }}
-              >
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
+              {/* Photo grid */}
+              <div className="animate d3" style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gridTemplateRows: '1fr 1fr',
+                gap: '8px',
+                width: '280px',
+                height: '280px',
+                flexShrink: 0,
+              }}>
                 {photos.map((photo, i) => (
-                  <div
-                    key={i}
-                    style={{
-                      borderRadius: "0.75rem",
-                      overflow: "hidden",
-                      background: "rgba(255,255,255,0.12)",
-                      border: "2px dashed rgba(255,255,255,0.3)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
+                  <div key={i} className="photo-cell">
                     <img
                       src={photo.src}
                       alt={photo.alt}
-                      style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", borderRadius: "0.65rem" }}
-                      onError={(e) => {
-                        // show a soft placeholder if image is missing
-                        e.target.style.display = "none";
-                        e.target.parentNode.innerHTML = `<span style="color:rgba(255,255,255,0.45);font-size:12px;text-align:center;padding:8px;">Photo ${i + 1}</span>`;
+                      onError={e => {
+                        e.target.style.display = 'none';
+                        e.target.parentNode.innerHTML = `<div style="height:100%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.25);font-family:var(--mono);font-size:10px;">photo ${i+1}</div>`;
                       }}
                     />
                   </div>
                 ))}
               </div>
 
-              {/* Paragraph */}
-              <div className="flex-1" style={{ maxWidth: "560px" }}>
-                <p className="text-white leading-relaxed text-base" style={{ lineHeight: "1.85" }}>
+              {/* Bio text */}
+              <div className="animate d4" style={{ maxWidth: '560px' }}>
+                <p style={{ fontFamily: 'var(--serif)', fontSize: '1.2rem', fontWeight: 300, lineHeight: 1.9, color: 'rgba(255,255,255,0.9)', margin: 0 }}>
                   I'm a Computer Science graduate from Berea College with a double minor in Philosophy and Law, Ethics, and Society, beginning my Master's in Cybersecurity at Johns Hopkins Whiting School of Engineering in Fall 2026. Originally from Thailand, I moved to the U.S. for college and am fluent in both Thai and English. I specialize in backend development, data analysis, and machine learning, with a strong interest in building full-stack tools that support scientific and educational research. My work blends a solid foundation in statistics and programming with real-world application—particularly through high-impact projects in biomechanics and data visualization. Outside of tech, I'm passionate about running and fitness, and I also work as a personal trainer.
                 </p>
               </div>
             </div>
           </section>
 
-          {/* ── Education ── */}
-          <section>
-            <p className="section-label text-white">02</p>
-            <h2 className="text-3xl font-bold mb-8">Education</h2>
+          <div className="divider"></div>
 
-            <div className="flex flex-col gap-5" style={{ maxWidth: "640px" }}>
+          {/* Education */}
+          <section>
+            <div className="sl animate d1">02 / Education</div>
+            <h2 className="animate d2" style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(1.8rem, 4vw, 2.6rem)', fontWeight: 300, marginTop: 0, marginBottom: '2rem', color: '#ffffff' }}>
+              Academic Training
+            </h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '600px' }}>
               {education.map((edu, i) => (
-                <div key={i} className="edu-box p-5">
-                  <div className="flex items-start gap-4">
-                    {/* Logo */}
-                    <div className="logo-placeholder">
+                <div key={i} className={`edu-box animate d${i + 3}`}>
+                  <div style={{ display: 'flex', gap: '1.2rem', alignItems: 'flex-start' }}>
+                    <div className="logo-ph">
                       <img
                         src={edu.logo}
-                        alt={edu.school + " logo"}
-                        onError={(e) => {
-                          e.target.style.display = "none";
-                          e.target.parentNode.innerHTML = `<span style="color:rgba(255,255,255,0.5);font-size:9px;text-align:center;line-height:1.2;padding:4px;">Logo</span>`;
+                        alt={edu.school + ' logo'}
+                        onError={e => {
+                          e.target.style.display = 'none';
+                          e.target.parentNode.innerHTML = '<span style="color:rgba(255,255,255,0.35);font-size:9px;font-family:var(--mono);">logo</span>';
                         }}
                       />
                     </div>
-
-                    {/* Text */}
-                    <div className="flex-1">
-                      <h3 className="font-bold text-lg leading-snug mb-1">{edu.school}</h3>
-                      <p className="text-sm font-medium opacity-90">{edu.degree}</p>
-                      {edu.minor && (
-                        <p className="text-sm opacity-75 mt-0.5">{edu.minor}</p>
-                      )}
-                      <p
-                        className="text-xs mt-2 font-semibold"
-                        style={{
-                          background: "rgba(255,255,255,0.15)",
-                          display: "inline-block",
-                          padding: "2px 10px",
-                          borderRadius: "999px",
-                          letterSpacing: "0.05em",
-                        }}
-                      >
-                        {edu.duration}
-                      </p>
+                    <div>
+                      <div style={{ fontFamily: 'var(--serif)', fontSize: '1.2rem', fontWeight: 400, color: '#ffffff', marginBottom: '4px' }}>{edu.school}</div>
+                      <div style={{ fontFamily: 'var(--mono)', fontSize: '13px', color: 'rgba(255,255,255,0.75)', marginBottom: edu.minor ? '3px' : 0 }}>{edu.degree}</div>
+                      {edu.minor && <div style={{ fontFamily: 'var(--mono)', fontSize: '12px', color: 'rgba(255,255,255,0.55)', marginBottom: 0 }}>{edu.minor}</div>}
+                      <div className="pill-date">{edu.duration}</div>
                     </div>
                   </div>
                 </div>
@@ -482,27 +698,21 @@
 
     function ProjectsPage({ onBack }) {
       const [view, setView] = React.useState("main");
-
       if (view === "dataManager") return <DataManagerProjects onBack={() => setView("main")} />;
       if (view === "personal") return <PersonalProjects onBack={() => setView("main")} />;
 
       return (
-        <div className="h-full flex flex-col items-center justify-center text-white p-6">
-          <button onClick={onBack} className="mb-6 px-4 py-2 bg-white text-purple-700 font-semibold rounded shadow hover:bg-purple-100 transition">
-            ← Back
-          </button>
-          <h2 className="text-3xl font-bold mb-10">Projects</h2>
-          <div className="flex flex-col md:flex-row gap-8">
-            <div
-              onClick={() => setView("dataManager")}
-              className="w-64 h-64 rounded-lg bg-black hover:bg-gray-700 cursor-pointer transition transform hover:scale-105 shadow-lg flex items-center justify-center text-center text-lg font-semibold p-4"
-            >
+        <div className="page-wrap" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
+          <button onClick={onBack} className="back-btn">← Back</button>
+          <div className="sl animate d1" style={{ textAlign: 'center' }}>03 / Projects</div>
+          <h2 className="animate d2" style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(2rem, 5vw, 3rem)', fontWeight: 300, marginTop: 0, marginBottom: '3rem', color: '#ffffff', textAlign: 'center' }}>
+            Selected Work
+          </h2>
+          <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <div onClick={() => setView("dataManager")} className="proj-tile animate d3" style={{ width: '240px', height: '240px' }}>
               Work done as a part of my role as a Data Analyst
             </div>
-            <div
-              onClick={() => setView("personal")}
-              className="w-64 h-64 rounded-lg bg-black hover:bg-gray-700 cursor-pointer transition transform hover:scale-105 shadow-lg flex items-center justify-center text-center text-lg font-semibold p-4"
-            >
+            <div onClick={() => setView("personal")} className="proj-tile animate d4" style={{ width: '240px', height: '240px' }}>
               Personal Projects
             </div>
           </div>
@@ -515,82 +725,39 @@
       const pdfSrc = "Publication.pdf";
 
       return (
-        <div className="w-full min-h-full p-8 text-white">
-          <button
-            onClick={onBack}
-            className="mb-8 px-4 py-2 bg-white text-purple-700 font-semibold rounded shadow hover:bg-purple-100 transition"
-          >
-            ← Back
-          </button>
+        <div className="page-wrap">
+          <button onClick={onBack} className="back-btn">← Back</button>
 
-          <h2 className="text-3xl font-bold mb-10 text-center">Publications</h2>
+          <div className="sl animate d1">04 / Publications</div>
+          <h2 className="animate d2" style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(1.8rem, 4vw, 2.6rem)', fontWeight: 300, marginTop: 0, marginBottom: '2.5rem', color: '#ffffff' }}>
+            Published Research
+          </h2>
 
-          {/* Citation card */}
-          <div
-            style={{
-              background: "rgba(255,255,255,0.12)",
-              backdropFilter: "blur(10px)",
-              border: "1px solid rgba(255,255,255,0.25)",
-              borderRadius: "1rem",
-              padding: "1.5rem",
-              maxWidth: "860px",
-              margin: "0 auto 2rem auto",
-            }}
-          >
-            <p
-              className="text-xs font-semibold mb-3"
-              style={{ letterSpacing: "0.15em", textTransform: "uppercase", opacity: 0.65 }}
-            >
-              Citation
-            </p>
-            <p
-              className="text-sm leading-relaxed"
-              style={{ fontFamily: "Georgia, 'Times New Roman', serif", lineHeight: "1.8" }}
-            >
+          <div className="citation-card animate d3">
+            <div className="sl" style={{ marginBottom: '1rem' }}>Citation</div>
+            <p style={{ fontFamily: 'var(--serif)', fontSize: '1.15rem', lineHeight: 1.85, color: 'rgba(255,255,255,0.9)', margin: 0 }}>
               {citation}
             </p>
           </div>
 
-          {/* Embedded PDF */}
-          <div style={{ maxWidth: "860px", margin: "0 auto" }}>
-            <p
-              className="text-xs font-semibold mb-3"
-              style={{ letterSpacing: "0.15em", textTransform: "uppercase", opacity: 0.65 }}
-            >
-              Full Paper
-            </p>
-            <div
-              style={{
-                borderRadius: "1rem",
-                overflow: "hidden",
-                border: "1px solid rgba(255,255,255,0.25)",
-                background: "rgba(0,0,0,0.25)",
-              }}
-            >
+          <div style={{ maxWidth: '840px', margin: '0 auto' }} className="animate d4">
+            <div className="sl" style={{ marginBottom: '1rem' }}>Full Paper</div>
+            <div style={{ border: '0.5px solid var(--border)', borderRadius: '4px', overflow: 'hidden', background: 'rgba(0,0,0,0.3)' }}>
               <iframe
                 src={pdfSrc}
                 title="Publication PDF"
                 width="100%"
                 height="700px"
-                style={{ display: "block", border: "none" }}
+                style={{ display: 'block', border: 'none' }}
               >
-                <p className="text-white p-4">
+                <p style={{ color: '#ffffff', padding: '1rem' }}>
                   Your browser does not support inline PDFs.{" "}
-                  <a href={pdfSrc} className="underline" target="_blank" rel="noopener noreferrer">
-                    Download the PDF
-                  </a>{" "}
-                  to read it.
+                  <a href={pdfSrc} style={{ color: 'var(--accent2)' }} target="_blank" rel="noopener noreferrer">Download the PDF</a> to read it.
                 </p>
               </iframe>
             </div>
-            <div className="mt-4 text-center">
-              <a
-                href={pdfSrc}
-                download
-                className="inline-block px-6 py-2 bg-white text-purple-700 font-semibold rounded shadow hover:bg-purple-100 transition text-sm"
-              >
-                ↓ Download PDF
-              </a>
+            <div style={{ marginTop: '1rem', textAlign: 'center' }}>
+              <a href={pdfSrc} download className="link-btn" style={{ display: 'inline-block' }}>↓ Download PDF</a>
             </div>
           </div>
         </div>
@@ -599,34 +766,92 @@
 
     function App() {
       const [view, setView] = React.useState("home");
-
       if (view === "experience") return <ExperienceSection onBack={() => setView("home")} />;
       if (view === "projects") return <ProjectsPage onBack={() => setView("home")} />;
       if (view === "background & education") return <BackgroundSection onBack={() => setView("home")} />;
       if (view === "publications") return <PublicationsSection onBack={() => setView("home")} />;
 
       return (
-        <div className="h-full flex flex-col justify-center items-center text-white text-center px-4">
-          <h1 className="text-4xl font-bold mb-10">Jessica Douthit</h1>
-          <h1 className="text-4xl font-bold mb-10">Data Analyst and Software Engineer</h1>
-          <h4 className="text-4xl font-bold mb-10">Currently pursuing an M.S. in Cybersecurity at Johns Hopkins Whiting School Engineering</h4>
-          <h4 className="text-4xl font-bold mb-10">Portfolio</h4>
-          <div className="flex justify-center space-x-12 flex-wrap">
-            {["Experience", "Projects", "Background & Education", "Publications"].map((label) => (
+        <div style={{
+          minHeight: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          textAlign: 'center',
+          padding: '3rem 2rem',
+        }}>
+          {/* Small decorative line */}
+          <div className="animate d1" style={{ width: '40px', height: '1px', background: 'var(--accent2)', marginBottom: '2.5rem', opacity: 0.6 }}></div>
+
+          {/* Name */}
+          <h1 className="animate d2" style={{
+            fontFamily: 'var(--serif)',
+            fontSize: 'clamp(2.8rem, 7vw, 5rem)',
+            fontWeight: 300,
+            letterSpacing: '0.04em',
+            color: '#ffffff',
+            margin: '0 0 0.3rem',
+            lineHeight: 1.1,
+          }}>
+            Jessica Douthit
+          </h1>
+
+          {/* Title */}
+          <div className="animate d3" style={{
+            fontFamily: 'var(--mono)',
+            fontSize: 'clamp(0.85rem, 1.8vw, 1rem)',
+            letterSpacing: '0.22em',
+            textTransform: 'uppercase',
+            color: 'rgba(255,255,255,0.85)',
+            marginBottom: '2rem',
+          }}>
+            Data Analyst &amp; Software Engineer
+          </div>
+
+          {/* Subtitle lines — smaller */}
+          <div className="animate d4" style={{
+            fontFamily: 'var(--serif)',
+            fontStyle: 'italic',
+            fontSize: 'clamp(1.05rem, 2.2vw, 1.3rem)',
+            fontWeight: 300,
+            color: 'rgba(255,255,255,0.75)',
+            marginBottom: '0.5rem',
+          }}>
+            M.S. Cybersecurity — Johns Hopkins Whiting School of Engineering
+          </div>
+
+          <div className="animate d5" style={{
+            fontFamily: 'var(--mono)',
+            fontSize: 'clamp(0.75rem, 1.2vw, 0.85rem)',
+            letterSpacing: '0.28em',
+            textTransform: 'uppercase',
+            color: '#ffffff',
+            marginBottom: '3.5rem',
+          }}>
+            Portfolio
+          </div>
+
+          {/* Nav tiles */}
+          <div className="home-grid animate d6">
+            {["Experience", "Projects", "Background & Education", "Publications"].map(label => (
               <div
                 key={label}
+                className="nav-tile"
                 onClick={() => setView(label.toLowerCase())}
-                className="w-36 h-36 rounded-full bg-black cursor-pointer hover:bg-gray-700 transition transform hover:scale-105 shadow-lg flex items-center justify-center text-lg font-semibold m-4"
               >
                 {label}
               </div>
             ))}
           </div>
+
+          {/* Bottom rule */}
+          <div className="animate d6" style={{ width: '40px', height: '1px', background: 'var(--border)', marginTop: '3.5rem' }}></div>
         </div>
       );
     }
 
-    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+    ReactDOM.createRoot(document.getElementById("app-root")).render(<App />);
   </script>
 </body>
 </html>
