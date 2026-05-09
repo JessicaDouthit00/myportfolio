@@ -32,6 +32,55 @@
       animation: gradientShift 15s ease infinite;
       overflow: auto;
     }
+
+    .edu-box {
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 1rem;
+      transition: background 0.2s;
+    }
+    .edu-box:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .photo-grid img {
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+      border-radius: 0.75rem;
+      display: block;
+    }
+
+    .logo-placeholder {
+      width: 56px;
+      height: 56px;
+      min-width: 56px;
+      border-radius: 0.5rem;
+      background: rgba(255,255,255,0.15);
+      border: 2px dashed rgba(255,255,255,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: rgba(255,255,255,0.6);
+      text-align: center;
+      overflow: hidden;
+    }
+    .logo-placeholder img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 0.4rem;
+    }
+
+    .section-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      opacity: 0.7;
+      margin-bottom: 0.5rem;
+    }
   </style>
 </head>
 <body>
@@ -39,12 +88,21 @@
 
   <script type="text/babel">
     const experiences = [
-    
+      {
+        title: "Applications Services Intern",
+        company: "Johns Hopkins Applied Physics Laboratory",
+        location: "Laurel, Maryland",
+        duration: "January May 2026 – Present",
+        description: [
+          "Design software as directed and collaborate with fellow members of the IAS Applications Group on the reconstruction of APL's software system"
+        ],
+        skills: ["Python", "React.js", "Java"]
+      },
       {
         title: "Data Analyst",
         company: "Berea College Health & Human Performance",
         location: "Berea, KY",
-        duration: "Aug 2024 – Present",
+        duration: "Aug 2024 – May 2026",
         description: [
           "Led data cleaning, statistical analysis, and visualization for two high-impact human performance studies—bombsuit operator functionality and deadlift biomechanics—using R and Python on datasets exceeding 50,000 observations.",
           "Engineered a robust data collection platform to streamline and error-proof research assistant workflows during trials involving Biodex and VALD ForceDecks equipment.",
@@ -53,20 +111,6 @@
         ],
         skills: ["Python", "R", "Javascript", "HTML/CSS", "React.js", "Node.js", "Statistics", "Data Engineering", "Data Visualisation"]
       },
-
-      {
-        title: "Junior Data Analyst",
-        company: "Salt Exchange",
-        location: "Remote",
-        duration: "January 2025 – Present",
-        description: [
-          "Build and maintain ETL pipelines using Python to automate data processing.",
-          "Clean, transform, and validate large datasets for accurate analysis.",
-          "Develop dashboards and reports to track key metrics and trends.",
-        ],
-        skills: ["Python", "Backend Engineering",  "Statistics",  "Data Visualisation", "Frontend Engineering"]
-      },
-
       {
         title: "Data Science Intern",
         company: "Virginia Tech DSPG Program",
@@ -77,7 +121,7 @@
           "Built a distance-decay hedonic model, conducted a heterogeneity analysis and an events study to verify the results",
           "Developed an R Shiny web app to visualise results to stakeholders, co-authored an academic paper currently undergoing peer-review",
         ],
-        skills: ["R", "ArcGIS", "Statistics", "Data  Engineering", "Data Visualisation", "R Shiny", "Leaflet", "GG Plot"]
+        skills: ["R", "ArcGIS", "Statistics", "Data Engineering", "Data Visualisation", "R Shiny", "Leaflet", "GG Plot"]
       }
     ];
 
@@ -190,6 +234,11 @@
           title: "VO2 Device Comparison Study",
           description: "A website depicting the preliminary results of Dr. Mortara's research on the efficacy of different VO2 measurement devices.",
           link: "https://jessicadouthit00.github.io/VO2/"
+        },
+        {
+          title: "Deadlift Systematic Review",
+          description: "A systematic review of an incomplete dataset meant to determine the number of additional subjects needed to render the study viable.",
+          link: "https://jessicadouthit00.github.io/DeadliftReview/"
         }
       ];
 
@@ -271,36 +320,162 @@
             >
               Archivus
             </a>
+            <a
+              href="https://jessicadouthit00.github.io/DRC/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-64 h-64 rounded-lg bg-black hover:bg-gray-700 cursor-pointer transition transform hover:scale-105 shadow-lg flex items-center justify-center text-center text-lg font-semibold p-4"
+            >
+              Spatial Analysis of DRC Conflict
+            </a>
+            <a
+              href="https://youtu.be/qzmH0izR6J0"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-64 h-64 rounded-lg bg-black hover:bg-gray-700 cursor-pointer transition transform hover:scale-105 shadow-lg flex items-center justify-center text-center text-lg font-semibold p-4"
+            >
+              Lab-Controlled MITM Attack
+            </a>
           </div>
         </div>
       );
     }
 
+    /* ─── UPDATED Background & Education Section ─── */
     function BackgroundSection({ onBack }) {
+      // Placeholder paths — replace src values with your actual image paths
+      const photos = [
+        { src: "images/photo1.jpg", alt: "Photo 1" },
+        { src: "images/photo2.jpg", alt: "Photo 2" },
+        { src: "images/photo3.jpg", alt: "Photo 3" },
+        { src: "images/photo4.jpg", alt: "Photo 4" },
+      ];
+
+      const education = [
+        {
+          logo: "images/jhu-logo.png",       // replace with your JHU logo path
+          school: "Johns Hopkins Whiting School of Engineering",
+          degree: "Master of Science in Cybersecurity",
+          duration: "Fall 2026 – Present",
+        },
+        {
+          logo: "images/berea-logo.png",      // replace with your Berea logo path
+          school: "Berea College",
+          degree: "Bachelor of Science in Computer and Information Science",
+          minor: "Double Minor in Philosophy and Law, Ethics, and Society",
+          duration: "August 2022 – May 2026",
+        },
+      ];
+
       return (
-        <div className="w-full h-full p-8 text-white">
+        <div className="w-full min-h-full p-8 text-white">
           <button
             onClick={onBack}
-            className="mb-6 px-4 py-2 bg-white text-purple-700 font-semibold rounded shadow hover:bg-purple-100 transition"
+            className="mb-8 px-4 py-2 bg-white text-purple-700 font-semibold rounded shadow hover:bg-purple-100 transition"
           >
             ← Back
           </button>
-          <h2 className="text-3xl font-bold text-center mb-10">Background</h2>
-          <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
-            <img
-              src="images/jessica.JPG"
-              alt="Jessica Douthit"
-              className="w-72 h-auto rounded-lg shadow-md"
-            />
-            <div className="max-w-xl text-white space-y-4">
-              <p>
-                I'm a senior Computer Science major at Berea College with a double minor in Philosophy and Law, Ethics, and Society. Originally from Thailand, I moved to the U.S. for college and I am fluent in both Thai and English. I specialize in backend development, data analysis, and machine learning, with a strong interest in building full-stack tools that support scientific and educational research. My work blends a solid foundation in statistics and programming with real-world application—particularly through high-impact projects in biomechanics and data visualization. Outside of tech, I'm passionate about running and fitness, and I also work as a personal trainer.  
-              </p>
-              <p>
-                
-              </p>
+
+          {/* ── Background ── */}
+          <section className="mb-14">
+            <p className="section-label text-white">01</p>
+            <h2 className="text-3xl font-bold mb-8">Background</h2>
+
+            <div className="flex flex-col md:flex-row gap-8 items-start">
+              {/* 2×2 photo grid */}
+              <div
+                className="photo-grid flex-shrink-0"
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gridTemplateRows: "1fr 1fr",
+                  gap: "12px",
+                  width: "320px",
+                  height: "320px",
+                }}
+              >
+                {photos.map((photo, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      borderRadius: "0.75rem",
+                      overflow: "hidden",
+                      background: "rgba(255,255,255,0.12)",
+                      border: "2px dashed rgba(255,255,255,0.3)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <img
+                      src={photo.src}
+                      alt={photo.alt}
+                      style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", borderRadius: "0.65rem" }}
+                      onError={(e) => {
+                        // show a soft placeholder if image is missing
+                        e.target.style.display = "none";
+                        e.target.parentNode.innerHTML = `<span style="color:rgba(255,255,255,0.45);font-size:12px;text-align:center;padding:8px;">Photo ${i + 1}</span>`;
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+
+              {/* Paragraph */}
+              <div className="flex-1" style={{ maxWidth: "560px" }}>
+                <p className="text-white leading-relaxed text-base" style={{ lineHeight: "1.85" }}>
+                  I'm a Computer Science graduate from Berea College with a double minor in Philosophy and Law, Ethics, and Society, beginning my Master's in Cybersecurity at Johns Hopkins Whiting School of Engineering in Fall 2026. Originally from Thailand, I moved to the U.S. for college and am fluent in both Thai and English. I specialize in backend development, data analysis, and machine learning, with a strong interest in building full-stack tools that support scientific and educational research. My work blends a solid foundation in statistics and programming with real-world application—particularly through high-impact projects in biomechanics and data visualization. Outside of tech, I'm passionate about running and fitness, and I also work as a personal trainer.
+                </p>
+              </div>
             </div>
-          </div>
+          </section>
+
+          {/* ── Education ── */}
+          <section>
+            <p className="section-label text-white">02</p>
+            <h2 className="text-3xl font-bold mb-8">Education</h2>
+
+            <div className="flex flex-col gap-5" style={{ maxWidth: "640px" }}>
+              {education.map((edu, i) => (
+                <div key={i} className="edu-box p-5">
+                  <div className="flex items-start gap-4">
+                    {/* Logo */}
+                    <div className="logo-placeholder">
+                      <img
+                        src={edu.logo}
+                        alt={edu.school + " logo"}
+                        onError={(e) => {
+                          e.target.style.display = "none";
+                          e.target.parentNode.innerHTML = `<span style="color:rgba(255,255,255,0.5);font-size:9px;text-align:center;line-height:1.2;padding:4px;">Logo</span>`;
+                        }}
+                      />
+                    </div>
+
+                    {/* Text */}
+                    <div className="flex-1">
+                      <h3 className="font-bold text-lg leading-snug mb-1">{edu.school}</h3>
+                      <p className="text-sm font-medium opacity-90">{edu.degree}</p>
+                      {edu.minor && (
+                        <p className="text-sm opacity-75 mt-0.5">{edu.minor}</p>
+                      )}
+                      <p
+                        className="text-xs mt-2 font-semibold"
+                        style={{
+                          background: "rgba(255,255,255,0.15)",
+                          display: "inline-block",
+                          padding: "2px 10px",
+                          borderRadius: "999px",
+                          letterSpacing: "0.05em",
+                        }}
+                      >
+                        {edu.duration}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
         </div>
       );
     }
@@ -335,12 +510,100 @@
       );
     }
 
+    function PublicationsSection({ onBack }) {
+      const citation = "Cary, M., Chen, S., Douthit, J., Jackson, N., McCloud, M., & Rosner, B. (2025). Estimating the heterogeneous effects of a utility-scale solar facility on house prices. Land Use Policy, 159, 107796. https://doi.org/10.1016/j.landusepol.2025.107796";
+      const pdfSrc = "Publication.pdf";
+
+      return (
+        <div className="w-full min-h-full p-8 text-white">
+          <button
+            onClick={onBack}
+            className="mb-8 px-4 py-2 bg-white text-purple-700 font-semibold rounded shadow hover:bg-purple-100 transition"
+          >
+            ← Back
+          </button>
+
+          <h2 className="text-3xl font-bold mb-10 text-center">Publications</h2>
+
+          {/* Citation card */}
+          <div
+            style={{
+              background: "rgba(255,255,255,0.12)",
+              backdropFilter: "blur(10px)",
+              border: "1px solid rgba(255,255,255,0.25)",
+              borderRadius: "1rem",
+              padding: "1.5rem",
+              maxWidth: "860px",
+              margin: "0 auto 2rem auto",
+            }}
+          >
+            <p
+              className="text-xs font-semibold mb-3"
+              style={{ letterSpacing: "0.15em", textTransform: "uppercase", opacity: 0.65 }}
+            >
+              Citation
+            </p>
+            <p
+              className="text-sm leading-relaxed"
+              style={{ fontFamily: "Georgia, 'Times New Roman', serif", lineHeight: "1.8" }}
+            >
+              {citation}
+            </p>
+          </div>
+
+          {/* Embedded PDF */}
+          <div style={{ maxWidth: "860px", margin: "0 auto" }}>
+            <p
+              className="text-xs font-semibold mb-3"
+              style={{ letterSpacing: "0.15em", textTransform: "uppercase", opacity: 0.65 }}
+            >
+              Full Paper
+            </p>
+            <div
+              style={{
+                borderRadius: "1rem",
+                overflow: "hidden",
+                border: "1px solid rgba(255,255,255,0.25)",
+                background: "rgba(0,0,0,0.25)",
+              }}
+            >
+              <iframe
+                src={pdfSrc}
+                title="Publication PDF"
+                width="100%"
+                height="700px"
+                style={{ display: "block", border: "none" }}
+              >
+                <p className="text-white p-4">
+                  Your browser does not support inline PDFs.{" "}
+                  <a href={pdfSrc} className="underline" target="_blank" rel="noopener noreferrer">
+                    Download the PDF
+                  </a>{" "}
+                  to read it.
+                </p>
+              </iframe>
+            </div>
+            <div className="mt-4 text-center">
+              <a
+                href={pdfSrc}
+                download
+                className="inline-block px-6 py-2 bg-white text-purple-700 font-semibold rounded shadow hover:bg-purple-100 transition text-sm"
+              >
+                ↓ Download PDF
+              </a>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     function App() {
       const [view, setView] = React.useState("home");
 
       if (view === "experience") return <ExperienceSection onBack={() => setView("home")} />;
       if (view === "projects") return <ProjectsPage onBack={() => setView("home")} />;
       if (view === "background & education") return <BackgroundSection onBack={() => setView("home")} />;
+      if (view === "publications") return <PublicationsSection onBack={() => setView("home")} />;
 
       return (
         <div className="h-full flex flex-col justify-center items-center text-white text-center px-4">
@@ -348,7 +611,7 @@
           <h1 className="text-4xl font-bold mb-10">Data Analyst</h1>
           <h1 className="text-4xl font-bold mb-10">Portfolio</h1>
           <div className="flex justify-center space-x-12 flex-wrap">
-            {["Experience", "Projects", "Background & Education"].map((label) => (
+            {["Experience", "Projects", "Background & Education", "Publications"].map((label) => (
               <div
                 key={label}
                 onClick={() => setView(label.toLowerCase())}
@@ -366,7 +629,6 @@
   </script>
 </body>
 </html>
-
 
 
 
