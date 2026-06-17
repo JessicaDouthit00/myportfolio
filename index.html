@@ -1,927 +1,922 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Jessica Douthit | Portfolio</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Jessica Douthit | Portfolio</title>
 
-  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
 
-  <style>
-    *, *::before, *::after { box-sizing: border-box; }
+  :root {
+    --bg: #050d1a;
+    --bone: #ffffff;
+    --bone2: #e8f0ff;
+    --accent: #2a6dd9;
+    --accent2: #6aaef5;
+    --dim: rgba(255,255,255,0.12);
+    --border: rgba(255,255,255,0.18);
+    --text-muted: rgba(255,255,255,0.55);
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --mono: 'DM Mono', 'Courier New', monospace;
+  }
 
-    :root {
-      --bg: #050d1a;
-      --bone: #ffffff;
-      --bone2: #e8f0ff;
-      --accent: #2a6dd9;
-      --accent2: #6aaef5;
-      --dim: rgba(255,255,255,0.12);
-      --border: rgba(255,255,255,0.18);
-      --text-muted: rgba(255,255,255,0.55);
-      --serif: 'Cormorant Garamond', Georgia, serif;
-      --mono: 'DM Mono', 'Courier New', monospace;
-    }
+  html, body { margin: 0; height: 100%; }
 
-    html, body { margin: 0; height: 100%; }
+  @keyframes bgShift {
+    0%   { background-color: #000000; }
+    14%  { background-color: #050d1a; }
+    28%  { background-color: #0d1a35; }
+    42%  { background-color: #1a0533; }
+    56%  { background-color: #2a0845; }
+    70%  { background-color: #0d0a2e; }
+    84%  { background-color: #050d1a; }
+    100% { background-color: #000000; }
+  }
 
-    @keyframes bgShift {
-      0%   { background-color: #000000; }
-      14%  { background-color: #050d1a; }
-      28%  { background-color: #0d1a35; }
-      42%  { background-color: #1a0533; }
-      56%  { background-color: #2a0845; }
-      70%  { background-color: #0d0a2e; }
-      84%  { background-color: #050d1a; }
-      100% { background-color: #000000; }
-    }
+  #root {
+    min-height: 100vh;
+    background-color: #000000;
+    animation: bgShift 24s ease-in-out infinite;
+    color: #ffffff;
+    font-family: var(--mono);
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: relative;
+  }
 
-    #root {
-      min-height: 100vh;
-      background-color: #000000;
-      animation: bgShift 24s ease-in-out infinite;
-      color: #ffffff;
-      font-family: var(--mono);
-      overflow-x: hidden;
-      overflow-y: auto;
-      position: relative;
-    }
+  #bg-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
 
-    /* ─── Animated canvas background ─── */
-    #bg-canvas {
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      pointer-events: none;
-    }
+  #app-root {
+    position: relative;
+    z-index: 1;
+  }
 
-    /* Everything above canvas */
-    #app-root {
-      position: relative;
-      z-index: 1;
-    }
+  #root::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent2), #a8d4ff, var(--accent2), transparent);
+    z-index: 9998;
+  }
 
-    /* ─── Subtle top accent line ─── */
-    #root::after {
-      content: '';
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--accent2), #a8d4ff, var(--accent2), transparent);
-      z-index: 9998;
-    }
+  @keyframes orb1 {
+    0%   { transform: translate(0, 0) scale(1); }
+    33%  { transform: translate(60px, -40px) scale(1.08); }
+    66%  { transform: translate(-30px, 50px) scale(0.95); }
+    100% { transform: translate(0, 0) scale(1); }
+  }
+  @keyframes orb2 {
+    0%   { transform: translate(0, 0) scale(1); }
+    40%  { transform: translate(-70px, 60px) scale(1.1); }
+    80%  { transform: translate(40px, -30px) scale(0.92); }
+    100% { transform: translate(0, 0) scale(1); }
+  }
+  @keyframes orb3 {
+    0%   { transform: translate(0, 0) scale(1); }
+    50%  { transform: translate(50px, 40px) scale(1.05); }
+    100% { transform: translate(0, 0) scale(1); }
+  }
 
-    @keyframes orb1 {
-      0%   { transform: translate(0, 0) scale(1); }
-      33%  { transform: translate(60px, -40px) scale(1.08); }
-      66%  { transform: translate(-30px, 50px) scale(0.95); }
-      100% { transform: translate(0, 0) scale(1); }
-    }
-    @keyframes orb2 {
-      0%   { transform: translate(0, 0) scale(1); }
-      40%  { transform: translate(-70px, 60px) scale(1.1); }
-      80%  { transform: translate(40px, -30px) scale(0.92); }
-      100% { transform: translate(0, 0) scale(1); }
-    }
-    @keyframes orb3 {
-      0%   { transform: translate(0, 0) scale(1); }
-      50%  { transform: translate(50px, 40px) scale(1.05); }
-      100% { transform: translate(0, 0) scale(1); }
-    }
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(90px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .orb1 {
+    width: 520px; height: 520px;
+    top: -120px; left: -100px;
+    background: radial-gradient(circle, rgba(30,80,200,0.30) 0%, rgba(80,20,140,0.15) 50%, transparent 70%);
+    animation: orb1 18s ease-in-out infinite;
+  }
+  .orb2 {
+    width: 440px; height: 440px;
+    bottom: -80px; right: -80px;
+    background: radial-gradient(circle, rgba(90,20,160,0.25) 0%, rgba(20,60,160,0.15) 50%, transparent 70%);
+    animation: orb2 22s ease-in-out infinite;
+  }
+  .orb3 {
+    width: 300px; height: 300px;
+    top: 45%; left: 55%;
+    background: radial-gradient(circle, rgba(80,140,255,0.12) 0%, rgba(120,40,180,0.08) 50%, transparent 70%);
+    animation: orb3 14s ease-in-out infinite;
+  }
 
-    .orb {
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(90px);
-      pointer-events: none;
-      z-index: 0;
-    }
-    .orb1 {
-      width: 520px; height: 520px;
-      top: -120px; left: -100px;
-      background: radial-gradient(circle, rgba(30,80,200,0.30) 0%, rgba(80,20,140,0.15) 50%, transparent 70%);
-      animation: orb1 18s ease-in-out infinite;
-    }
-    .orb2 {
-      width: 440px; height: 440px;
-      bottom: -80px; right: -80px;
-      background: radial-gradient(circle, rgba(90,20,160,0.25) 0%, rgba(20,60,160,0.15) 50%, transparent 70%);
-      animation: orb2 22s ease-in-out infinite;
-    }
-    .orb3 {
-      width: 300px; height: 300px;
-      top: 45%; left: 55%;
-      background: radial-gradient(circle, rgba(80,140,255,0.12) 0%, rgba(120,40,180,0.08) 50%, transparent 70%);
-      animation: orb3 14s ease-in-out infinite;
-    }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(18px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+  .animate { animation: fadeUp 0.55s cubic-bezier(.22,.68,0,1.1) both; }
+  .d1 { animation-delay: .05s; }
+  .d2 { animation-delay: .15s; }
+  .d3 { animation-delay: .25s; }
+  .d4 { animation-delay: .35s; }
+  .d5 { animation-delay: .45s; }
+  .d6 { animation-delay: .55s; }
 
-    .animate { animation: fadeUp 0.55s cubic-bezier(.22,.68,0,1.1) both; }
-    .d1 { animation-delay: .05s; }
-    .d2 { animation-delay: .15s; }
-    .d3 { animation-delay: .25s; }
-    .d4 { animation-delay: .35s; }
-    .d5 { animation-delay: .45s; }
-    .d6 { animation-delay: .55s; }
+  @media (prefers-reduced-motion: reduce) {
+    #root { animation: none; background-color: #050d1a; }
+    .orb { animation: none; }
+    .animate { animation: none; }
+  }
 
-    /* ─── Back button ─── */
-    .back-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 9px 22px;
-      border: 1px solid rgba(255,255,255,0.65);
-      background: transparent;
-      color: var(--bone);
-      font-family: var(--mono);
-      font-size: 13px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      cursor: pointer;
-      border-radius: 2px;
-      transition: background 0.18s, border-color 0.18s;
-      margin-bottom: 2.5rem;
-    }
-    .back-btn:hover {
-      background: rgba(255,255,255,0.08);
-      border-color: rgba(255,255,255,0.95);
-    }
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 22px;
+    border: 1px solid rgba(255,255,255,0.65);
+    background: transparent;
+    color: var(--bone);
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: background 0.18s, border-color 0.18s;
+    margin-bottom: 2.5rem;
+  }
+  .back-btn:hover, .back-btn:focus-visible {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.95);
+  }
+  .back-btn:focus-visible { outline: 2px solid var(--accent2); outline-offset: 2px; }
 
-    /* ─── Section label ─── */
-    .sl {
-      font-family: var(--mono);
-      font-size: 13px;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--accent2);
-      margin-bottom: 0.6rem;
-    }
+  .sl {
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 0.6rem;
+  }
 
-    /* ─── Glassmorphism card ─── */
-    .glass {
-      background: rgba(255,255,255,0.04);
-      border: 0.5px solid var(--border);
-      border-radius: 4px;
-      transition: background 0.2s, border-color 0.2s;
-    }
-    .glass:hover {
-      background: rgba(255,255,255,0.07);
-      border-color: rgba(255,255,255,0.22);
-    }
+  .glass {
+    background: rgba(255,255,255,0.04);
+    border: 0.5px solid var(--border);
+    border-radius: 4px;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .glass:hover {
+    background: rgba(255,255,255,0.07);
+    border-color: rgba(255,255,255,0.22);
+  }
 
-    /* ─── Skill pill ─── */
-    .skill-pill {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 7px 18px;
-      border: 1px solid rgba(106,174,245,0.6);
-      background: rgba(42,109,217,0.15);
-      color: #ffffff;
-      font-family: var(--mono);
-      font-size: 13px;
-      letter-spacing: 0.08em;
-      border-radius: 2px;
-      transition: background 0.18s, transform 0.15s;
-    }
-    .skill-pill:hover {
-      background: rgba(42,109,217,0.28);
-      transform: translateY(-2px);
-    }
+  .skill-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px 18px;
+    border: 1px solid rgba(106,174,245,0.6);
+    background: rgba(42,109,217,0.15);
+    color: #ffffff;
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    border-radius: 2px;
+    transition: background 0.18s, transform 0.15s;
+  }
+  .skill-pill:hover {
+    background: rgba(42,109,217,0.28);
+    transform: translateY(-2px);
+  }
 
-    /* ─── Experience card (left list) ─── */
-    .exp-card {
-      padding: 1.2rem 1.4rem;
-      border: 0.5px solid var(--border);
-      background: rgba(255,255,255,0.02);
-      border-radius: 3px;
-      cursor: pointer;
-      transition: background 0.18s, border-color 0.18s;
-      position: relative;
-    }
-    .exp-card::before {
-      content: '';
-      position: absolute;
-      left: 0; top: 0; bottom: 0;
-      width: 2px;
-      background: transparent;
-      border-radius: 0;
-      transition: background 0.2s;
-    }
-    .exp-card.active::before,
-    .exp-card:hover::before {
-      background: var(--accent2);
-    }
-    .exp-card.active {
-      background: rgba(42,109,217,0.1);
-      border-color: rgba(106,174,245,0.4);
-    }
-    .exp-card:hover {
-      background: rgba(255,255,255,0.04);
-    }
+  .exp-card {
+    padding: 1.2rem 1.4rem;
+    border: 0.5px solid var(--border);
+    background: rgba(255,255,255,0.02);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.18s, border-color 0.18s;
+    position: relative;
+  }
+  .exp-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 2px;
+    background: transparent;
+    transition: background 0.2s;
+  }
+  .exp-card.active::before,
+  .exp-card:hover::before {
+    background: var(--accent2);
+  }
+  .exp-card.active {
+    background: rgba(42,109,217,0.1);
+    border-color: rgba(106,174,245,0.4);
+  }
+  .exp-card:hover {
+    background: rgba(255,255,255,0.04);
+  }
+  .exp-card:focus-visible { outline: 2px solid var(--accent2); outline-offset: 2px; }
 
-    /* ─── Project tile ─── */
-    .proj-tile {
-      width: 200px;
-      height: 200px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      font-family: var(--mono);
-      font-size: 14px;
-      line-height: 1.6;
-      letter-spacing: 0.04em;
-      border: 1px solid rgba(255,255,255,0.45);
-      background: rgba(255,255,255,0.02);
-      border-radius: 3px;
-      cursor: pointer;
-      text-decoration: none;
-      color: var(--bone);
-      padding: 1.2rem;
-      transition: background 0.18s, border-color 0.18s, transform 0.18s;
-    }
-    .proj-tile:hover {
-      background: rgba(42,109,217,0.15);
-      border-color: rgba(106,174,245,0.7);
-      transform: translateY(-4px);
-    }
+  .exp-title { font-family: var(--serif); font-size: 1.2rem; font-weight: 400; color: #ffffff; margin-bottom: 4px; }
+  .exp-sub { font-family: var(--mono); font-size: 13px; color: rgba(255,255,255,0.65); letter-spacing: 0.06em; margin-bottom: 8px; }
+  .exp-duration { font-family: var(--mono); font-size: 12px; color: var(--accent2); letter-spacing: 0.1em; }
+  .exp-list { margin-top: 10px; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 6px; }
+  .exp-list li { font-family: var(--mono); font-size: 13px; color: rgba(255,255,255,0.85); line-height: 1.75; letter-spacing: 0.02em; }
 
-    /* ─── Edu box ─── */
-    .edu-box {
-      padding: 1.4rem 1.6rem;
-      border: 0.5px solid var(--border);
-      background: rgba(255,255,255,0.03);
-      border-radius: 4px;
-      transition: background 0.2s;
-    }
-    .edu-box:hover {
-      background: rgba(255,255,255,0.06);
-    }
+  .proj-tile {
+    width: 200px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 14px;
+    line-height: 1.6;
+    letter-spacing: 0.04em;
+    border: 1px solid rgba(255,255,255,0.45);
+    background: rgba(255,255,255,0.02);
+    border-radius: 3px;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--bone);
+    padding: 1.2rem;
+    transition: background 0.18s, border-color 0.18s, transform 0.18s;
+  }
+  .proj-tile:hover, .proj-tile:focus-visible {
+    background: rgba(42,109,217,0.15);
+    border-color: rgba(106,174,245,0.7);
+    transform: translateY(-4px);
+  }
+  .proj-tile:focus-visible { outline: 2px solid var(--accent2); outline-offset: 2px; }
 
-    .logo-ph {
-      width: 52px;
-      height: 52px;
-      min-width: 52px;
-      border-radius: 3px;
-      border: 0.5px solid rgba(255,255,255,0.18);
-      background: rgba(255,255,255,0.06);
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .logo-ph img {
-      width: 100%; height: 100%;
-      object-fit: contain;
-    }
+  .edu-box {
+    padding: 1.4rem 1.6rem;
+    border: 0.5px solid var(--border);
+    background: rgba(255,255,255,0.03);
+    border-radius: 4px;
+    transition: background 0.2s;
+  }
+  .edu-box:hover { background: rgba(255,255,255,0.06); }
 
-    .pill-date {
-      display: inline-block;
-      font-family: var(--mono);
-      font-size: 12px;
-      letter-spacing: 0.1em;
-      padding: 4px 12px;
-      border: 0.5px solid rgba(106,174,245,0.5);
-      background: rgba(42,109,217,0.12);
-      color: var(--accent2);
-      border-radius: 2px;
-      margin-top: 8px;
-    }
+  .logo-ph {
+    width: 52px;
+    height: 52px;
+    min-width: 52px;
+    border-radius: 3px;
+    border: 0.5px solid rgba(255,255,255,0.18);
+    background: rgba(255,255,255,0.06);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .logo-ph img { width: 100%; height: 100%; object-fit: contain; }
+  .logo-ph span { color: rgba(255,255,255,0.35); font-size: 9px; font-family: var(--mono); }
 
-    /* ─── Photo grid ─── */
-    .photo-cell {
-      border-radius: 3px;
-      overflow: hidden;
-      background: rgba(255,255,255,0.05);
-      border: 0.5px solid var(--border);
-    }
-    .photo-cell img {
-      width: 100%; height: 100%;
-      object-fit: cover;
-      display: block;
-    }
+  .pill-date {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    padding: 4px 12px;
+    border: 0.5px solid rgba(106,174,245,0.5);
+    background: rgba(42,109,217,0.12);
+    color: var(--accent2);
+    border-radius: 2px;
+    margin-top: 8px;
+  }
 
-    /* ─── Link button ─── */
-    .link-btn {
-      display: block;
-      padding: 10px 22px;
-      border: 1px solid rgba(255,255,255,0.6);
-      background: transparent;
-      color: var(--bone);
-      font-family: var(--mono);
-      font-size: 13px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      text-decoration: none;
-      text-align: center;
-      border-radius: 2px;
-      transition: background 0.18s, border-color 0.18s;
-    }
-    .link-btn:hover {
-      background: rgba(255,255,255,0.06);
-      border-color: rgba(106,174,245,0.9);
-    }
+  .photo-cell {
+    border-radius: 3px;
+    overflow: hidden;
+    background: rgba(255,255,255,0.05);
+    border: 0.5px solid var(--border);
+  }
+  .photo-cell img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .photo-cell .ph-fallback { height: 100%; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.25); font-family: var(--mono); font-size: 10px; }
 
-    /* ─── Citation card ─── */
-    .citation-card {
-      background: rgba(255,255,255,0.03);
-      border: 0.5px solid var(--border);
-      border-radius: 4px;
-      padding: 1.8rem;
-      max-width: 840px;
-      margin: 0 auto 2.5rem;
-    }
+  .link-btn {
+    display: block;
+    padding: 10px 22px;
+    border: 1px solid rgba(255,255,255,0.6);
+    background: transparent;
+    color: var(--bone);
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    text-align: center;
+    border-radius: 2px;
+    transition: background 0.18s, border-color 0.18s;
+  }
+  .link-btn:hover, .link-btn:focus-visible {
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(106,174,245,0.9);
+  }
+  .link-btn:focus-visible { outline: 2px solid var(--accent2); outline-offset: 2px; }
 
-    /* ─── Scroll container ─── */
-    .page-wrap {
-      min-height: 100vh;
-      padding: 3rem clamp(1.5rem, 5vw, 5rem);
-    }
+  .citation-card {
+    background: rgba(255,255,255,0.03);
+    border: 0.5px solid var(--border);
+    border-radius: 4px;
+    padding: 1.8rem;
+    max-width: 840px;
+    margin: 0 auto 2.5rem;
+  }
 
-    /* ─── Divider ─── */
-    .divider {
-      height: 0.5px;
-      background: var(--border);
-      margin: 2.5rem 0;
-    }
+  .page-wrap { min-height: 100vh; padding: 3rem clamp(1.5rem, 5vw, 5rem); }
 
-    /* ─── Home layout ─── */
-    .home-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      max-width: 440px;
-      margin: 0 auto;
-    }
-    @media (min-width: 600px) {
-      .home-grid {
-        grid-template-columns: repeat(4, 1fr);
-        max-width: 640px;
-      }
-    }
+  .divider { height: 0.5px; background: var(--border); margin: 2.5rem 0; }
 
-    .nav-tile {
-      aspect-ratio: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      font-family: var(--mono);
-      font-size: 12px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      line-height: 1.6;
-      border: 1px solid rgba(255,255,255,0.5);
-      background: rgba(255,255,255,0.02);
-      cursor: pointer;
-      border-radius: 3px;
-      padding: 1rem;
-      transition: background 0.18s, border-color 0.18s, transform 0.15s;
-      color: var(--bone);
-    }
-    .nav-tile:hover {
-      background: rgba(42,109,217,0.15);
-      border-color: rgba(106,174,245,0.7);
-      transform: translateY(-3px);
-    }
+  .home-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    max-width: 440px;
+    margin: 0 auto;
+  }
+  @media (min-width: 600px) {
+    .home-grid { grid-template-columns: repeat(4, 1fr); max-width: 640px; }
+  }
 
-    /* pub row */
-    .proj-row {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-    @media (min-width: 640px) {
-      .proj-row { flex-direction: row; }
-    }
+  .nav-tile {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    line-height: 1.6;
+    border: 1px solid rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.02);
+    cursor: pointer;
+    border-radius: 3px;
+    padding: 1rem;
+    transition: background 0.18s, border-color 0.18s, transform 0.15s;
+    color: var(--bone);
+  }
+  .nav-tile:hover, .nav-tile:focus-visible {
+    background: rgba(42,109,217,0.15);
+    border-color: rgba(106,174,245,0.7);
+    transform: translateY(-3px);
+  }
+  .nav-tile:focus-visible { outline: 2px solid var(--accent2); outline-offset: 2px; }
 
-    /* ─── Corner images ─── */
-    .corner-img {
-      position: fixed;
-      top: 2rem;
-      width: 120px;
-      height: 120px;
-      border-radius: 4px;
-      border: 0.5px solid var(--border);
-      background: rgba(255,255,255,0.04);
-      overflow: hidden;
-      z-index: 2;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .corner-img img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-    .corner-img-left  { left: 2rem; }
-    .corner-img-right { right: 2rem; }
+  .proj-row { display: flex; flex-direction: column; gap: 1.5rem; }
+  @media (min-width: 640px) { .proj-row { flex-direction: row; } }
 
-    @media (max-width: 700px) {
-      .corner-img { width: 80px; height: 80px; top: 1.2rem; }
-      .corner-img-left  { left: 1rem; }
-      .corner-img-right { right: 1rem; }
-    }
-  </style>
+  .corner-img {
+    position: fixed;
+    top: 2rem;
+    width: 120px;
+    height: 120px;
+    border-radius: 4px;
+    border: 0.5px solid var(--border);
+    background: rgba(255,255,255,0.04);
+    overflow: hidden;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .corner-img img { width: 100%; height: 100%; object-fit: contain; }
+  .corner-img span { color: rgba(255,255,255,0.2); font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; }
+  .corner-img-left  { left: 2rem; }
+  .corner-img-right { right: 2rem; }
+
+  @media (max-width: 700px) {
+    .corner-img { width: 80px; height: 80px; top: 1.2rem; }
+    .corner-img-left  { left: 1rem; }
+    .corner-img-right { right: 1rem; }
+  }
+
+  .row-link {
+    display: flex; align-items: center; gap: 1.5rem; padding: 1rem 1.4rem;
+    background: rgba(255,255,255,0.02); text-decoration: none; color: #ffffff;
+    transition: background 0.15s;
+  }
+  .row-link:hover, .row-link:focus-visible { background: rgba(42,109,217,0.1); }
+  .row-link:focus-visible { outline: 2px solid var(--accent2); outline-offset: -2px; }
+  .row-index { font-family: var(--mono); font-size: 12px; color: var(--accent2); min-width: 24px; letter-spacing: 0.1em; }
+  .row-title { font-family: var(--serif); font-size: 1.15rem; font-weight: 400; margin-bottom: 3px; }
+  .row-desc { font-family: var(--mono); font-size: 12.5px; color: rgba(255,255,255,0.65); line-height: 1.6; }
+  .row-arrow { font-family: var(--mono); font-size: 13px; color: rgba(255,255,255,0.5); }
+
+  h1, h2 { margin: 0; }
+  a { -webkit-tap-highlight-color: transparent; }
+</style>
 </head>
 <body>
-  <div id="root">
-    <div class="orb orb1"></div>
-    <div class="orb orb2"></div>
-    <div class="orb orb3"></div>
-    <div id="app-root"></div>
-  </div>
+<div id="root">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+  <div id="app-root"></div>
+</div>
 
-  <script type="text/babel">
-    const experiences = [
-      {
-        title: "Technical Aide",
-        company: "Johns Hopkins Applied Physics Laboratory",
-        location: "Laurel, Maryland",
-        duration: "May 2026 – Present",
-        description: [
-          "Design software as directed and collaborate with fellow members of the IAS Applications Group on the reconstruction of APL's software system"
-        ],
-        skills: ["Python", "React.js", "Java"]
-      },
-      {
-        title: "Data Analyst",
-        company: "Berea College Health & Human Performance",
-        location: "Berea, KY",
-        duration: "Aug 2024 – May 2026",
-        description: [
-          "Led data cleaning, statistical analysis, and visualization for two high-impact human performance studies—bombsuit operator functionality and deadlift biomechanics—using R and Python on datasets exceeding 50,000 observations.",
-          "Engineered a robust data collection platform to streamline and error-proof research assistant workflows during trials involving Biodex and VALD ForceDecks equipment.",
-          "Developed over 20 interactive R Shiny applications to communicate complex analysis outcomes to stakeholders in real-time.",
-          "Designed and deployed 10 full-stack web applications (JavaScript, React, HTML/CSS), including a participant sign-up portal for the URCPP bombsuit research study.",
-        ],
-        skills: ["Python", "R", "Javascript", "HTML/CSS", "React.js", "Node.js", "Statistics", "Data Engineering", "Data Visualisation"]
-      },
-      {
-        title: "Data Science Intern",
-        company: "Virginia Tech DSPG Program",
-        location: "Blacksburg, VA",
-        duration: "May 2024 – Aug 2024",
-        description: [
-          "Cleaned dataset containing over 23,000 observations via ArcGIS to measure distance between each observation and the solar facility.",
-          "Built a distance-decay hedonic model, conducted a heterogeneity analysis and an events study to verify the results.",
-          "Developed an R Shiny web app to visualise results to stakeholders, co-authored an academic paper currently undergoing peer-review.",
-        ],
-        skills: ["R", "ArcGIS", "Statistics", "Data Engineering", "Data Visualisation", "R Shiny", "Leaflet", "GG Plot"]
+<script>
+(function () {
+  "use strict";
+
+  /* ---------------------------------------------------------------- */
+  /* Data                                                              */
+  /* ---------------------------------------------------------------- */
+
+  var experiences = [
+    {
+      title: "Technical Aide",
+      company: "Johns Hopkins Applied Physics Laboratory",
+      location: "Laurel, Maryland",
+      duration: "May 2026 \u2013 Present",
+      description: [
+        "Design software as directed and collaborate with fellow members of the IAS Applications Group on the reconstruction of APL's software system"
+      ],
+      skills: ["Python", "React.js", "Java"]
+    },
+    {
+      title: "Data Analyst",
+      company: "Berea College Health & Human Performance",
+      location: "Berea, KY",
+      duration: "Aug 2024 \u2013 May 2026",
+      description: [
+        "Led data cleaning, statistical analysis, and visualization for two high-impact human performance studies\u2014bombsuit operator functionality and deadlift biomechanics\u2014using R and Python on datasets exceeding 50,000 observations.",
+        "Engineered a robust data collection platform to streamline and error-proof research assistant workflows during trials involving Biodex and VALD ForceDecks equipment.",
+        "Developed over 20 interactive R Shiny applications to communicate complex analysis outcomes to stakeholders in real-time.",
+        "Designed and deployed 10 full-stack web applications (JavaScript, React, HTML/CSS), including a participant sign-up portal for the URCPP bombsuit research study."
+      ],
+      skills: ["Python", "R", "Javascript", "HTML/CSS", "React.js", "Node.js", "Statistics", "Data Engineering", "Data Visualisation"]
+    },
+    {
+      title: "Data Science Intern",
+      company: "Virginia Tech DSPG Program",
+      location: "Blacksburg, VA",
+      duration: "May 2024 \u2013 Aug 2024",
+      description: [
+        "Cleaned dataset containing over 23,000 observations via ArcGIS to measure distance between each observation and the solar facility.",
+        "Built a distance-decay hedonic model, conducted a heterogeneity analysis and an events study to verify the results.",
+        "Developed an R Shiny web app to visualise results to stakeholders, co-authored an academic paper currently undergoing peer-review."
+      ],
+      skills: ["R", "ArcGIS", "Statistics", "Data Engineering", "Data Visualisation", "R Shiny", "Leaflet", "GG Plot"]
+    }
+  ];
+
+  var dataManagerProjects = [
+    { title: "Yoga Pose Visualisation Tool", description: "A review tool for the yoga class at Berea College.", link: "https://jessicadouthit00.github.io/yoga/" },
+    { title: "Preliminary Data Analysis", description: "Preliminary data analysis done for faculty research on the physics of deadlifts.", link: "https://jessica-douthit-0.shinyapps.io/preliminary/" },
+    { title: "Wellness Data Dashboard", description: "Analyzed impact of consolidating Wellness 101 and 102 into Wellness 150 on student grades, using scraped Moodle data processed in R.", link: "https://jessica-douthit-0.shinyapps.io/wellness/" },
+    { title: "Research Portal", description: "Allows subjects to sign up for an ongoing URCPP study improving functionality for Bombsuit Operators.", link: "https://jessicadouthit00.github.io/hhpresearch1/" },
+    { title: "FMS & RPE Analysis: Final", description: "Visualises results for URCPP 799, including bar charts and overlapping bubble graphs.", link: "https://jessica-douthit-0.shinyapps.io/StarExcursionTest/" },
+    { title: "FMS & RPE Analysis: Preliminary", description: "Interactive visualization for Functional Movement Screen and Rate of Perceived Exertion data.", link: "https://jessicadouthit00.github.io/fmsrpe-visualization/" },
+    { title: "URCPP 799 Project", description: "Alternative visualisation designed for a presentation at Eastern Kentucky University.", link: "https://jessicadouthit00.github.io/799/" },
+    { title: "VO2 Device Comparison Study", description: "Depicts preliminary results of Dr. Mortara's research on the efficacy of different VO2 measurement devices.", link: "https://jessicadouthit00.github.io/VO2/" },
+    { title: "Deadlift Systematic Review", description: "Systematic review to determine the number of additional subjects needed to render the study viable.", link: "https://jessicadouthit00.github.io/DeadliftReview/" }
+  ];
+
+  var personalProjects = [
+    { label: "A small compiler for the C language", link: "https://github.com/JessicaDouthit00/C-Compiler" },
+    { label: "My Personal Training Website", link: "https://jessicadouthit00.github.io/personaltraining/" },
+    { label: "Berea Women's Club", link: "https://jessicadouthit00.github.io/womensclub/" },
+    { label: "Archivus", link: "https://www.youtube.com/watch?v=fyvA-8-e-CM" },
+    { label: "Spatial Analysis of DRC Conflict", link: "https://jessicadouthit00.github.io/DRC/" },
+    { label: "Lab-Controlled MITM Attack", link: "https://youtu.be/qzmH0izR6J0" },
+    { label: "The Austen Archive", link: "https://jessicadouthit00.github.io/austenarchive/" }
+  ];
+
+  var educationData = [
+    {
+      logo: "images/jhu-logo.jpg",
+      school: "Johns Hopkins Whiting School of Engineering",
+      degree: "Master of Science in Cybersecurity",
+      duration: "Fall 2026 \u2013 Present"
+    },
+    {
+      logo: "images/berea-logo.jpg",
+      school: "Berea College",
+      degree: "Bachelor of Science in Computer and Information Science",
+      minor: "Double Minor in Philosophy and Law, Ethics, and Society",
+      duration: "August 2022 \u2013 May 2026"
+    }
+  ];
+
+  var citationText = "Cary, M., Chen, S., Douthit, J., Jackson, N., McCloud, M., & Rosner, B. (2025). Estimating the heterogeneous effects of a utility-scale solar facility on house prices. Land Use Policy, 159, 107796. https://doi.org/10.1016/j.landusepol.2025.107796";
+  var pdfSrc = "Publication.pdf";
+
+  /* ---------------------------------------------------------------- */
+  /* Tiny DOM helper                                                   */
+  /* ---------------------------------------------------------------- */
+
+  function el(tag, attrs, children) {
+    var node = document.createElement(tag);
+    attrs = attrs || {};
+    for (var key in attrs) {
+      if (!Object.prototype.hasOwnProperty.call(attrs, key)) continue;
+      var val = attrs[key];
+      if (key === "class") node.className = val;
+      else if (key === "style") node.setAttribute("style", val);
+      else if (key === "html") node.innerHTML = val;
+      else if (key.indexOf("on") === 0 && typeof val === "function") {
+        node.addEventListener(key.slice(2).toLowerCase(), val);
+      } else {
+        node.setAttribute(key, val);
       }
+    }
+    children = children || [];
+    for (var i = 0; i < children.length; i++) {
+      var child = children[i];
+      if (child == null) continue;
+      if (typeof child === "string") node.appendChild(document.createTextNode(child));
+      else node.appendChild(child);
+    }
+    return node;
+  }
+
+  function animDelay(i) {
+    var classes = ["d1", "d2", "d3", "d4", "d5", "d6"];
+    return classes[Math.min(i, classes.length - 1)];
+  }
+
+  function imgWithFallback(src, alt, fallbackText, wrapAttrs) {
+    var wrap = el("div", wrapAttrs || {});
+    var img = el("img", { src: src, alt: alt });
+    img.addEventListener("error", function () {
+      wrap.innerHTML = "";
+      wrap.appendChild(el("span", {}, [fallbackText]));
+    });
+    wrap.appendChild(img);
+    return wrap;
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Router                                                            */
+  /* ---------------------------------------------------------------- */
+
+  var appRoot = document.getElementById("app-root");
+  // state path is an array, e.g. [] for home, ["projects"], ["projects","personal"]
+  var state = { path: [] };
+
+  function navigate(path) {
+    state.path = path;
+    render();
+    window.scrollTo(0, 0);
+  }
+
+  function backButton(onBack) {
+    return el("button", { class: "back-btn", onClick: onBack }, ["\u2190 Back"]);
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Views                                                              */
+  /* ---------------------------------------------------------------- */
+
+  function renderHome() {
+    var wrap = el("div", {
+      style: "min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:3rem 2rem;"
+    });
+
+    wrap.appendChild(imgWithFallback("images/apl.jpg", "APL", "APL", { class: "corner-img corner-img-left animate d2" }));
+    wrap.appendChild(imgWithFallback("images/jhu.jpg", "JHU", "JHU", { class: "corner-img corner-img-right animate d2" }));
+
+    wrap.appendChild(el("div", { class: "animate d1", style: "width:40px;height:1px;background:var(--accent2);margin-bottom:2.5rem;opacity:0.6;" }));
+
+    wrap.appendChild(el("h1", {
+      class: "animate d2",
+      style: "font-family:var(--serif);font-size:clamp(2.8rem,7vw,5rem);font-weight:300;letter-spacing:0.04em;color:#ffffff;margin:0 0 0.3rem;line-height:1.1;"
+    }, ["Jessica Douthit"]));
+
+    wrap.appendChild(el("div", {
+      class: "animate d3",
+      style: "font-family:var(--mono);font-size:clamp(0.85rem,1.8vw,1rem);letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.85);margin-bottom:2rem;"
+    }, ["Data Analyst & Software Engineer"]));
+
+    wrap.appendChild(el("div", {
+      class: "animate d4",
+      style: "font-family:var(--serif);font-style:italic;font-size:clamp(1.05rem,2.2vw,1.3rem);font-weight:300;color:rgba(255,255,255,0.75);margin-bottom:0.4rem;"
+    }, ["Currently pursuing a M.S. in Cybersecurity at Johns Hopkins Whiting School of Engineering"]));
+
+    wrap.appendChild(el("div", {
+      class: "animate d4",
+      style: "font-family:var(--serif);font-style:italic;font-size:clamp(1.05rem,2.2vw,1.3rem);font-weight:300;color:rgba(255,255,255,0.75);margin-bottom:0.5rem;"
+    }, ["Technical Aide at Johns Hopkins Applied Physics Laboratory"]));
+
+    wrap.appendChild(el("div", {
+      class: "animate d5",
+      style: "font-family:var(--mono);font-size:clamp(0.75rem,1.2vw,0.85rem);letter-spacing:0.28em;text-transform:uppercase;color:#ffffff;margin-bottom:3.5rem;"
+    }, ["Portfolio"]));
+
+    var grid = el("div", { class: "home-grid animate d6" });
+    var labels = [
+      { label: "Experience", path: ["experience"] },
+      { label: "Projects", path: ["projects"] },
+      { label: "Background & Education", path: ["background"] },
+      { label: "Publications", path: ["publications"] }
     ];
+    labels.forEach(function (item) {
+      grid.appendChild(el("div", {
+        class: "nav-tile",
+        tabindex: "0",
+        role: "button",
+        onClick: function () { navigate(item.path); },
+        onKeydown: function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); navigate(item.path); } }
+      }, [item.label]));
+    });
+    wrap.appendChild(grid);
 
-    function ExperienceSection({ onBack }) {
-      const [selectedIndex, setSelectedIndex] = React.useState(0);
-      const sel = experiences[selectedIndex];
-      const isVT = sel.company.includes("Virginia Tech");
+    wrap.appendChild(el("div", { class: "animate d6", style: "width:40px;height:1px;background:var(--border);margin-top:3.5rem;" }));
 
-      return (
-        <div className="page-wrap">
-          <button onClick={onBack} className="back-btn">← Back</button>
+    return wrap;
+  }
 
-          <div className="sl animate d1">02 / Experience</div>
-          <h2 className="animate d2" style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(1.8rem, 4vw, 2.6rem)', fontWeight: 300, letterSpacing: '0.02em', marginTop: 0, marginBottom: '2.5rem', color: '#ffffff' }}>
-            Professional History
-          </h2>
+  function renderExperience() {
+    var selectedIndex = state.expIndex || 0;
+    var sel = experiences[selectedIndex];
+    var isVT = sel.company.indexOf("Virginia Tech") !== -1;
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
-            {/* Left: cards */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              {experiences.map((exp, i) => (
-                <div
-                  key={i}
-                  className={`exp-card animate${i === 0 ? ' d3' : i === 1 ? ' d4' : ' d5'} ${selectedIndex === i ? 'active' : ''}`}
-                  onClick={() => setSelectedIndex(i)}
-                >
-                  <div style={{ fontFamily: 'var(--serif)', fontSize: '1.2rem', fontWeight: 400, color: '#ffffff', marginBottom: '4px' }}>
-                    {exp.title}
-                  </div>
-                  <div style={{ fontFamily: 'var(--mono)', fontSize: '13px', color: 'rgba(255,255,255,0.65)', letterSpacing: '0.06em', marginBottom: '8px' }}>
-                    {exp.company} · {exp.location}
-                  </div>
-                  <div style={{ fontFamily: 'var(--mono)', fontSize: '12px', color: 'var(--accent2)', letterSpacing: '0.1em' }}>{exp.duration}</div>
-                  <ul style={{ marginTop: '10px', paddingLeft: '1.2rem', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                    {exp.description.map((item, idx) => (
-                      <li key={idx} style={{ fontFamily: 'var(--mono)', fontSize: '13px', color: 'rgba(255,255,255,0.85)', lineHeight: '1.75', letterSpacing: '0.02em' }}>{item}</li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
+    var wrap = el("div", { class: "page-wrap" });
+    wrap.appendChild(backButton(function () { navigate([]); }));
+    wrap.appendChild(el("div", { class: "sl animate d1" }, ["02 / Experience"]));
+    wrap.appendChild(el("h2", {
+      class: "animate d2",
+      style: "font-family:var(--serif);font-size:clamp(1.8rem,4vw,2.6rem);font-weight:300;letter-spacing:0.02em;margin-top:0;margin-bottom:2.5rem;color:#ffffff;"
+    }, ["Professional History"]));
 
-            {/* Right: skills */}
-            <div className="animate d6">
-              <div className="sl" style={{ marginBottom: '1rem' }}>Skills</div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '1.5rem' }}>
-                {sel.skills.map((s, i) => (
-                  <span key={i} className="skill-pill">{s}</span>
-                ))}
-              </div>
+    var outer = el("div", { style: "display:flex;flex-direction:column;gap:2.5rem;" });
 
-              {isVT && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '1rem', maxWidth: '320px' }}>
-                  <a href="https://aaec.vt.edu/academics/undergraduate/dspg/team/2024.html" target="_blank" rel="noopener noreferrer" className="link-btn">
-                    Virginia Tech Website ↗
-                  </a>
-                  <a href="https://aaec-vt.shinyapps.io/dspg24PrinceGeorge/" target="_blank" rel="noopener noreferrer" className="link-btn">
-                    R Shiny Web App ↗
-                  </a>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      );
+    var cardsWrap = el("div", { style: "display:flex;flex-direction:column;gap:10px;" });
+    experiences.forEach(function (exp, i) {
+      var card = el("div", {
+        class: "exp-card animate " + animDelay(i + 2) + (selectedIndex === i ? " active" : ""),
+        tabindex: "0",
+        role: "button",
+        onClick: function () { state.expIndex = i; render(); },
+        onKeydown: function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); state.expIndex = i; render(); } }
+      });
+      card.appendChild(el("div", { class: "exp-title" }, [exp.title]));
+      card.appendChild(el("div", { class: "exp-sub" }, [exp.company + " \u00b7 " + exp.location]));
+      card.appendChild(el("div", { class: "exp-duration" }, [exp.duration]));
+      var list = el("ul", { class: "exp-list" });
+      exp.description.forEach(function (d) { list.appendChild(el("li", {}, [d])); });
+      card.appendChild(list);
+      cardsWrap.appendChild(card);
+    });
+    outer.appendChild(cardsWrap);
+
+    var skillsWrap = el("div", { class: "animate d6" });
+    skillsWrap.appendChild(el("div", { class: "sl", style: "margin-bottom:1rem;" }, ["Skills"]));
+    var pillRow = el("div", { style: "display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.5rem;" });
+    sel.skills.forEach(function (s) { pillRow.appendChild(el("span", { class: "skill-pill" }, [s])); });
+    skillsWrap.appendChild(pillRow);
+
+    if (isVT) {
+      var linkCol = el("div", { style: "display:flex;flex-direction:column;gap:8px;margin-top:1rem;max-width:320px;" });
+      linkCol.appendChild(el("a", { class: "link-btn", href: "https://aaec.vt.edu/academics/undergraduate/dspg/team/2024.html", target: "_blank", rel: "noopener noreferrer" }, ["Virginia Tech Website \u2197"]));
+      linkCol.appendChild(el("a", { class: "link-btn", href: "https://aaec-vt.shinyapps.io/dspg24PrinceGeorge/", target: "_blank", rel: "noopener noreferrer" }, ["R Shiny Web App \u2197"]));
+      skillsWrap.appendChild(linkCol);
     }
+    outer.appendChild(skillsWrap);
 
-    function DataManagerProjects({ onBack }) {
-      const projects = [
-        { title: "Yoga Pose Visualisation Tool", description: "A review tool for the yoga class at Berea College.", link: "https://jessicadouthit00.github.io/yoga/" },
-        { title: "Preliminary Data Analysis", description: "Preliminary data analysis done for faculty research on the physics of deadlifts.", link: "https://jessica-douthit-0.shinyapps.io/preliminary/" },
-        { title: "Wellness Data Dashboard", description: "Analyzed impact of consolidating Wellness 101 and 102 into Wellness 150 on student grades, using scraped Moodle data processed in R.", link: "https://jessica-douthit-0.shinyapps.io/wellness/" },
-        { title: "Research Portal", description: "Allows subjects to sign up for an ongoing URCPP study improving functionality for Bombsuit Operators.", link: "https://jessicadouthit00.github.io/hhpresearch1/" },
-        { title: "FMS & RPE Analysis: Final", description: "Visualises results for URCPP 799, including bar charts and overlapping bubble graphs.", link: "https://jessica-douthit-0.shinyapps.io/StarExcursionTest/" },
-        { title: "FMS & RPE Analysis: Preliminary", description: "Interactive visualization for Functional Movement Screen and Rate of Perceived Exertion data.", link: "https://jessicadouthit00.github.io/fmsrpe-visualization/" },
-        { title: "URCPP 799 Project", description: "Alternative visualisation designed for a presentation at Eastern Kentucky University.", link: "https://jessicadouthit00.github.io/799/" },
-        { title: "VO2 Device Comparison Study", description: "Depicts preliminary results of Dr. Mortara's research on the efficacy of different VO2 measurement devices.", link: "https://jessicadouthit00.github.io/VO2/" },
-        { title: "Deadlift Systematic Review", description: "Systematic review to determine the number of additional subjects needed to render the study viable.", link: "https://jessicadouthit00.github.io/DeadliftReview/" }
-      ];
+    wrap.appendChild(outer);
+    return wrap;
+  }
 
-      return (
-        <div className="page-wrap">
-          <button onClick={onBack} className="back-btn">← Back</button>
-          <div className="sl animate d1">Work Samples</div>
-          <h2 className="animate d2" style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(1.8rem, 4vw, 2.6rem)', fontWeight: 300, marginTop: 0, marginBottom: '0.5rem', color: '#ffffff' }}>
-            Examples of Work
-          </h2>
-          <p className="animate d3" style={{ fontFamily: 'var(--mono)', fontSize: '13px', color: 'rgba(255,255,255,0.6)', letterSpacing: '0.05em', marginBottom: '2.5rem' }}>
-            * Due to FERPA and other privacy laws, the majority of my work as a Data Analyst is available only to Berea College Faculty.
-          </p>
+  function renderDataManagerProjects() {
+    var wrap = el("div", { class: "page-wrap" });
+    wrap.appendChild(backButton(function () { navigate(["projects"]); }));
+    wrap.appendChild(el("div", { class: "sl animate d1" }, ["Work Samples"]));
+    wrap.appendChild(el("h2", {
+      class: "animate d2",
+      style: "font-family:var(--serif);font-size:clamp(1.8rem,4vw,2.6rem);font-weight:300;margin-top:0;margin-bottom:0.5rem;color:#ffffff;"
+    }, ["Examples of Work"]));
+    wrap.appendChild(el("p", {
+      class: "animate d3",
+      style: "font-family:var(--mono);font-size:13px;color:rgba(255,255,255,0.6);letter-spacing:0.05em;margin-bottom:2.5rem;"
+    }, ["* Due to FERPA and other privacy laws, the majority of my work as a Data Analyst is available only to Berea College Faculty."]));
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1px', border: '0.5px solid var(--border)', borderRadius: '4px', overflow: 'hidden' }}>
-            {projects.map((p, i) => (
-              <a
-                key={i}
-                href={p.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  display: 'flex', alignItems: 'center', gap: '1.5rem', padding: '1rem 1.4rem',
-                  background: 'rgba(255,255,255,0.02)', textDecoration: 'none', color: '#ffffff',
-                  borderBottom: i < projects.length - 1 ? '0.5px solid var(--border)' : 'none',
-                  transition: 'background 0.15s',
-                }}
-                onMouseEnter={e => e.currentTarget.style.background = 'rgba(42,109,217,0.1)'}
-                onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.02)'}
-                className={`animate d${Math.min(i + 2, 6)}`}
-              >
-                <span style={{ fontFamily: 'var(--mono)', fontSize: '12px', color: 'var(--accent2)', minWidth: '24px', letterSpacing: '0.1em' }}>
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontFamily: 'var(--serif)', fontSize: '1.15rem', fontWeight: 400, marginBottom: '3px' }}>{p.title}</div>
-                  <div style={{ fontFamily: 'var(--mono)', fontSize: '12.5px', color: 'rgba(255,255,255,0.65)', lineHeight: '1.6' }}>{p.description}</div>
-                </div>
-                <span style={{ fontFamily: 'var(--mono)', fontSize: '13px', color: 'rgba(255,255,255,0.5)' }}>↗</span>
-              </a>
-            ))}
-          </div>
-        </div>
-      );
-    }
+    var list = el("div", { style: "display:flex;flex-direction:column;gap:1px;border:0.5px solid var(--border);border-radius:4px;overflow:hidden;" });
+    dataManagerProjects.forEach(function (p, i) {
+      var row = el("a", {
+        class: "row-link animate " + animDelay(i + 1),
+        href: p.link,
+        target: "_blank",
+        rel: "noopener noreferrer",
+        style: i < dataManagerProjects.length - 1 ? "border-bottom:0.5px solid var(--border);" : ""
+      });
+      row.appendChild(el("span", { class: "row-index" }, [String(i + 1).padStart(2, "0")]));
+      var mid = el("div", { style: "flex:1;" });
+      mid.appendChild(el("div", { class: "row-title" }, [p.title]));
+      mid.appendChild(el("div", { class: "row-desc" }, [p.description]));
+      row.appendChild(mid);
+      row.appendChild(el("span", { class: "row-arrow" }, ["\u2197"]));
+      list.appendChild(row);
+    });
+    wrap.appendChild(list);
+    return wrap;
+  }
 
-    function PersonalProjects({ onBack }) {
-      const projects = [
-        { label: "A small compiler for the C language", link: "https://github.com/JessicaDouthit00/C-Compiler" },
-        { label: "My Personal Training Website", link: "https://jessicadouthit00.github.io/personaltraining/" },
-        { label: "Berea Women's Club", link: "https://jessicadouthit00.github.io/womensclub/" },
-        { label: "Archivus", link: "https://www.youtube.com/watch?v=fyvA-8-e-CM" },
-        { label: "Spatial Analysis of DRC Conflict", link: "https://jessicadouthit00.github.io/DRC/" },
-        { label: "Lab-Controlled MITM Attack", link: "https://youtu.be/qzmH0izR6J0" },
-        { label: "The Austen Archive", link: "https://jessicadouthit00.github.io/austenarchive/" },
-      ];
+  function renderPersonalProjects() {
+    var wrap = el("div", { class: "page-wrap" });
+    wrap.appendChild(backButton(function () { navigate(["projects"]); }));
+    wrap.appendChild(el("div", { class: "sl animate d1" }, ["Personal Projects"]));
+    wrap.appendChild(el("h2", {
+      class: "animate d2",
+      style: "font-family:var(--serif);font-size:clamp(1.8rem,4vw,2.6rem);font-weight:300;margin-top:0;margin-bottom:2.5rem;color:#ffffff;"
+    }, ["Independent Work"]));
 
-      return (
-        <div className="page-wrap">
-          <button onClick={onBack} className="back-btn">← Back</button>
-          <div className="sl animate d1">Personal Projects</div>
-          <h2 className="animate d2" style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(1.8rem, 4vw, 2.6rem)', fontWeight: 300, marginTop: 0, marginBottom: '2.5rem', color: '#ffffff' }}>
-            Independent Work
-          </h2>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
-            {projects.map((p, i) => (
-              <a key={i} href={p.link} target="_blank" rel="noopener noreferrer" className={`proj-tile animate d${Math.min(i + 2, 6)}`}>
-                {p.label}
-              </a>
-            ))}
-          </div>
-        </div>
-      );
-    }
+    var grid = el("div", { style: "display:flex;flex-wrap:wrap;gap:12px;" });
+    personalProjects.forEach(function (p, i) {
+      grid.appendChild(el("a", {
+        class: "proj-tile animate " + animDelay(i + 1),
+        href: p.link,
+        target: "_blank",
+        rel: "noopener noreferrer"
+      }, [p.label]));
+    });
+    wrap.appendChild(grid);
+    return wrap;
+  }
 
-    function BackgroundSection({ onBack }) {
-      const photos = [
-        { src: "images/photo1.jpg", alt: "Photo 1" },
-        { src: "images/photo2.jpg", alt: "Photo 2" },
-        { src: "images/photo3.jpg", alt: "Photo 3" },
-        { src: "images/jessica.jpg", alt: "Photo 4" },
-      ];
-      const education = [
-        {
-          logo: "images/jhu-logo.jpg",
-          school: "Johns Hopkins Whiting School of Engineering",
-          degree: "Master of Science in Cybersecurity",
-          duration: "Fall 2026 – Present",
-        },
-        {
-          logo: "images/berea-logo.jpg",
-          school: "Berea College",
-          degree: "Bachelor of Science in Computer and Information Science",
-          minor: "Double Minor in Philosophy and Law, Ethics, and Society",
-          duration: "August 2022 – May 2026",
-        },
-      ];
+  function renderProjectsMain() {
+    var wrap = el("div", {
+      class: "page-wrap",
+      style: "display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;"
+    });
+    wrap.appendChild(backButton(function () { navigate([]); }));
+    wrap.appendChild(el("div", { class: "sl animate d1", style: "text-align:center;" }, ["03 / Projects"]));
+    wrap.appendChild(el("h2", {
+      class: "animate d2",
+      style: "font-family:var(--serif);font-size:clamp(2rem,5vw,3rem);font-weight:300;margin-top:0;margin-bottom:3rem;color:#ffffff;text-align:center;"
+    }, ["Selected Work"]));
 
-      return (
-        <div className="page-wrap">
-          <button onClick={onBack} className="back-btn">← Back</button>
+    var tilesRow = el("div", { style: "display:flex;gap:16px;flex-wrap:wrap;justify-content:center;" });
+    tilesRow.appendChild(el("div", {
+      class: "proj-tile animate d3",
+      style: "width:240px;height:240px;",
+      tabindex: "0",
+      role: "button",
+      onClick: function () { navigate(["projects", "dataManager"]); },
+      onKeydown: function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); navigate(["projects", "dataManager"]); } }
+    }, ["Work done as a part of my role as a Data Analyst"]));
+    tilesRow.appendChild(el("div", {
+      class: "proj-tile animate d4",
+      style: "width:240px;height:240px;",
+      tabindex: "0",
+      role: "button",
+      onClick: function () { navigate(["projects", "personal"]); },
+      onKeydown: function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); navigate(["projects", "personal"]); } }
+    }, ["Personal Projects"]));
+    wrap.appendChild(tilesRow);
 
-          {/* Background */}
-          <section style={{ marginBottom: '4rem' }}>
-            <div className="sl animate d1">01 / Background</div>
-            <h2 className="animate d2" style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(1.8rem, 4vw, 2.6rem)', fontWeight: 300, marginTop: 0, marginBottom: '2.5rem', color: '#ffffff' }}>
-              About Me
-            </h2>
+    return wrap;
+  }
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
-              {/* Photo grid */}
-              <div className="animate d3" style={{
-                display: 'flex',
-                flexDirection: 'row',
-                gap: '10px',
-                flexShrink: 0,
-              }}>
-                {photos.slice(0, 2).map((photo, i) => (
-                  <div key={i} className="photo-cell" style={{ width: '220px', height: '280px' }}>
-                    <img
-                      src={photo.src}
-                      alt={photo.alt}
-                      onError={e => {
-                        e.target.style.display = 'none';
-                        e.target.parentNode.innerHTML = `<div style="height:100%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.25);font-family:var(--mono);font-size:10px;">photo ${i+1}</div>`;
-                      }}
-                    />
-                  </div>
-                ))}
-              </div>
+  function renderBackground() {
+    var wrap = el("div", { class: "page-wrap" });
+    wrap.appendChild(backButton(function () { navigate([]); }));
 
-              {/* Bio text */}
-              <div className="animate d4" style={{ maxWidth: '560px' }}>
-                <p style={{ fontFamily: 'var(--serif)', fontSize: '1.2rem', fontWeight: 300, lineHeight: 1.9, color: 'rgba(255,255,255,0.9)', margin: 0 }}>
-                  I'm a Computer Science graduate from Berea College with a double minor in Philosophy and Law, Ethics, and Society, beginning my Master's in Cybersecurity at Johns Hopkins Whiting School of Engineering in Fall 2026. Originally from Thailand, I moved to the U.S. for college and am fluent in both Thai and English. I specialize in backend development, data analysis, and machine learning, with a strong interest in building full-stack tools that support scientific and educational research. My work blends a solid foundation in statistics and programming with real-world application—particularly through high-impact projects in biomechanics and data visualization. Outside of tech, I'm passionate about running and fitness, and I also work as a personal trainer.
-                </p>
-              </div>
-            </div>
-          </section>
+    var aboutSection = el("section", { style: "margin-bottom:4rem;" });
+    aboutSection.appendChild(el("div", { class: "sl animate d1" }, ["01 / Background"]));
+    aboutSection.appendChild(el("h2", {
+      class: "animate d2",
+      style: "font-family:var(--serif);font-size:clamp(1.8rem,4vw,2.6rem);font-weight:300;margin-top:0;margin-bottom:2.5rem;color:#ffffff;"
+    }, ["About Me"]));
 
-          <div className="divider"></div>
+    var aboutOuter = el("div", { style: "display:flex;flex-direction:column;gap:2.5rem;" });
 
-          {/* Education */}
-          <section>
-            <div className="sl animate d1">02 / Education</div>
-            <h2 className="animate d2" style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(1.8rem, 4vw, 2.6rem)', fontWeight: 300, marginTop: 0, marginBottom: '2rem', color: '#ffffff' }}>
-              Academic Training
-            </h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '600px' }}>
-              {education.map((edu, i) => (
-                <div key={i} className={`edu-box animate d${i + 3}`}>
-                  <div style={{ display: 'flex', gap: '1.2rem', alignItems: 'flex-start' }}>
-                    <div className="logo-ph">
-                      <img
-                        src={edu.logo}
-                        alt={edu.school + ' logo'}
-                        onError={e => {
-                          e.target.style.display = 'none';
-                          e.target.parentNode.innerHTML = '<span style="color:rgba(255,255,255,0.35);font-size:9px;font-family:var(--mono);">logo</span>';
-                        }}
-                      />
-                    </div>
-                    <div>
-                      <div style={{ fontFamily: 'var(--serif)', fontSize: '1.2rem', fontWeight: 400, color: '#ffffff', marginBottom: '4px' }}>{edu.school}</div>
-                      <div style={{ fontFamily: 'var(--mono)', fontSize: '13px', color: 'rgba(255,255,255,0.75)', marginBottom: edu.minor ? '3px' : 0 }}>{edu.degree}</div>
-                      {edu.minor && <div style={{ fontFamily: 'var(--mono)', fontSize: '12px', color: 'rgba(255,255,255,0.55)', marginBottom: 0 }}>{edu.minor}</div>}
-                      <div className="pill-date">{edu.duration}</div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-        </div>
-      );
-    }
+    var photoRow = el("div", { class: "animate d3", style: "display:flex;flex-direction:row;gap:10px;flex-shrink:0;" });
+    var photos = [
+      { src: "images/photo1.jpg", alt: "Photo 1" },
+      { src: "images/photo2.jpg", alt: "Photo 2" }
+    ];
+    photos.forEach(function (photo, i) {
+      var cell = el("div", { class: "photo-cell", style: "width:220px;height:280px;" });
+      var img = el("img", { src: photo.src, alt: photo.alt });
+      img.addEventListener("error", function () {
+        cell.innerHTML = "";
+        cell.appendChild(el("div", { class: "ph-fallback" }, ["photo " + (i + 1)]));
+      });
+      cell.appendChild(img);
+      photoRow.appendChild(cell);
+    });
+    aboutOuter.appendChild(photoRow);
 
-    function ProjectsPage({ onBack }) {
-      const [view, setView] = React.useState("main");
-      if (view === "dataManager") return <DataManagerProjects onBack={() => setView("main")} />;
-      if (view === "personal") return <PersonalProjects onBack={() => setView("main")} />;
+    var bioWrap = el("div", { class: "animate d4", style: "max-width:560px;" });
+    bioWrap.appendChild(el("p", {
+      style: "font-family:var(--serif);font-size:1.2rem;font-weight:300;line-height:1.9;color:rgba(255,255,255,0.9);margin:0;"
+    }, ["I'm a Computer Science graduate from Berea College with a double minor in Philosophy and Law, Ethics, and Society, beginning my Master's in Cybersecurity at Johns Hopkins Whiting School of Engineering in Fall 2026. Originally from Thailand, I moved to the U.S. for college and am fluent in both Thai and English. I specialize in backend development, data analysis, and machine learning, with a strong interest in building full-stack tools that support scientific and educational research. My work blends a solid foundation in statistics and programming with real-world application\u2014particularly through high-impact projects in biomechanics and data visualization. Outside of tech, I'm passionate about running and fitness, and I also work as a personal trainer."]));
+    aboutOuter.appendChild(bioWrap);
 
-      return (
-        <div className="page-wrap" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
-          <button onClick={onBack} className="back-btn">← Back</button>
-          <div className="sl animate d1" style={{ textAlign: 'center' }}>03 / Projects</div>
-          <h2 className="animate d2" style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(2rem, 5vw, 3rem)', fontWeight: 300, marginTop: 0, marginBottom: '3rem', color: '#ffffff', textAlign: 'center' }}>
-            Selected Work
-          </h2>
-          <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', justifyContent: 'center' }}>
-            <div onClick={() => setView("dataManager")} className="proj-tile animate d3" style={{ width: '240px', height: '240px' }}>
-              Work done as a part of my role as a Data Analyst
-            </div>
-            <div onClick={() => setView("personal")} className="proj-tile animate d4" style={{ width: '240px', height: '240px' }}>
-              Personal Projects
-            </div>
-          </div>
-        </div>
-      );
-    }
+    aboutSection.appendChild(aboutOuter);
+    wrap.appendChild(aboutSection);
 
-    function PublicationsSection({ onBack }) {
-      const citation = "Cary, M., Chen, S., Douthit, J., Jackson, N., McCloud, M., & Rosner, B. (2025). Estimating the heterogeneous effects of a utility-scale solar facility on house prices. Land Use Policy, 159, 107796. https://doi.org/10.1016/j.landusepol.2025.107796";
-      const pdfSrc = "Publication.pdf";
+    wrap.appendChild(el("div", { class: "divider" }));
 
-      return (
-        <div className="page-wrap">
-          <button onClick={onBack} className="back-btn">← Back</button>
+    var eduSection = el("section");
+    eduSection.appendChild(el("div", { class: "sl animate d1" }, ["02 / Education"]));
+    eduSection.appendChild(el("h2", {
+      class: "animate d2",
+      style: "font-family:var(--serif);font-size:clamp(1.8rem,4vw,2.6rem);font-weight:300;margin-top:0;margin-bottom:2rem;color:#ffffff;"
+    }, ["Academic Training"]));
 
-          <div className="sl animate d1">04 / Publications</div>
-          <h2 className="animate d2" style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(1.8rem, 4vw, 2.6rem)', fontWeight: 300, marginTop: 0, marginBottom: '2.5rem', color: '#ffffff' }}>
-            Published Research
-          </h2>
+    var eduList = el("div", { style: "display:flex;flex-direction:column;gap:12px;max-width:600px;" });
+    educationData.forEach(function (edu, i) {
+      var box = el("div", { class: "edu-box animate " + animDelay(i + 2) });
+      var row = el("div", { style: "display:flex;gap:1.2rem;align-items:flex-start;" });
 
-          <div className="citation-card animate d3">
-            <div className="sl" style={{ marginBottom: '1rem' }}>Citation</div>
-            <p style={{ fontFamily: 'var(--serif)', fontSize: '1.15rem', lineHeight: 1.85, color: 'rgba(255,255,255,0.9)', margin: 0 }}>
-              {citation}
-            </p>
-          </div>
+      var logoWrap = el("div", { class: "logo-ph" });
+      var logoImg = el("img", { src: edu.logo, alt: edu.school + " logo" });
+      logoImg.addEventListener("error", function () {
+        logoWrap.innerHTML = "";
+        logoWrap.appendChild(el("span", {}, ["logo"]));
+      });
+      logoWrap.appendChild(logoImg);
+      row.appendChild(logoWrap);
 
-          <div style={{ maxWidth: '840px', margin: '0 auto' }} className="animate d4">
-            <div className="sl" style={{ marginBottom: '1rem' }}>Full Paper</div>
-            <div style={{ border: '0.5px solid var(--border)', borderRadius: '4px', overflow: 'hidden', background: 'rgba(0,0,0,0.3)' }}>
-              <iframe
-                src={pdfSrc}
-                title="Publication PDF"
-                width="100%"
-                height="700px"
-                style={{ display: 'block', border: 'none' }}
-              >
-                <p style={{ color: '#ffffff', padding: '1rem' }}>
-                  Your browser does not support inline PDFs.{" "}
-                  <a href={pdfSrc} style={{ color: 'var(--accent2)' }} target="_blank" rel="noopener noreferrer">Download the PDF</a> to read it.
-                </p>
-              </iframe>
-            </div>
-            <div style={{ marginTop: '1rem', textAlign: 'center' }}>
-              <a href={pdfSrc} download className="link-btn" style={{ display: 'inline-block' }}>↓ Download PDF</a>
-            </div>
-          </div>
-        </div>
-      );
-    }
+      var textCol = el("div");
+      textCol.appendChild(el("div", { style: "font-family:var(--serif);font-size:1.2rem;font-weight:400;color:#ffffff;margin-bottom:4px;" }, [edu.school]));
+      textCol.appendChild(el("div", { style: "font-family:var(--mono);font-size:13px;color:rgba(255,255,255,0.75);margin-bottom:" + (edu.minor ? "3px" : "0") + ";" }, [edu.degree]));
+      if (edu.minor) {
+        textCol.appendChild(el("div", { style: "font-family:var(--mono);font-size:12px;color:rgba(255,255,255,0.55);margin-bottom:0;" }, [edu.minor]));
+      }
+      textCol.appendChild(el("div", { class: "pill-date" }, [edu.duration]));
+      row.appendChild(textCol);
 
-    function CornerImage({ src, alt, side }) {
-      const [errored, setErrored] = React.useState(false);
-      return (
-        <div className={`corner-img corner-img-${side} animate d2`}>
-          {!errored ? (
-            <img src={src} alt={alt} onError={() => setErrored(true)} />
-          ) : (
-            <span style={{ color: 'rgba(255,255,255,0.2)', fontFamily: 'var(--mono)', fontSize: '10px', letterSpacing: '0.08em' }}>
-              {alt}
-            </span>
-          )}
-        </div>
-      );
-    }
+      box.appendChild(row);
+      eduList.appendChild(box);
+    });
+    eduSection.appendChild(eduList);
+    wrap.appendChild(eduSection);
 
-    function App() {
-      const [view, setView] = React.useState("home");
-      if (view === "experience") return <ExperienceSection onBack={() => setView("home")} />;
-      if (view === "projects") return <ProjectsPage onBack={() => setView("home")} />;
-      if (view === "background & education") return <BackgroundSection onBack={() => setView("home")} />;
-      if (view === "publications") return <PublicationsSection onBack={() => setView("home")} />;
+    return wrap;
+  }
 
-      return (
-        <div style={{
-          minHeight: '100vh',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          textAlign: 'center',
-          padding: '3rem 2rem',
-        }}>
-          {/* Corner images — only on home */}
-          <CornerImage src="images/apl.jpg" alt="APL" side="left" />
-          <CornerImage src="images/jhu.jpg" alt="JHU" side="right" />
+  function renderPublications() {
+    var wrap = el("div", { class: "page-wrap" });
+    wrap.appendChild(backButton(function () { navigate([]); }));
+    wrap.appendChild(el("div", { class: "sl animate d1" }, ["04 / Publications"]));
+    wrap.appendChild(el("h2", {
+      class: "animate d2",
+      style: "font-family:var(--serif);font-size:clamp(1.8rem,4vw,2.6rem);font-weight:300;margin-top:0;margin-bottom:2.5rem;color:#ffffff;"
+    }, ["Published Research"]));
 
-          {/* Small decorative line */}
-          <div className="animate d1" style={{ width: '40px', height: '1px', background: 'var(--accent2)', marginBottom: '2.5rem', opacity: 0.6 }}></div>
+    var citationCard = el("div", { class: "citation-card animate d3" });
+    citationCard.appendChild(el("div", { class: "sl", style: "margin-bottom:1rem;" }, ["Citation"]));
+    citationCard.appendChild(el("p", {
+      style: "font-family:var(--serif);font-size:1.15rem;line-height:1.85;color:rgba(255,255,255,0.9);margin:0;"
+    }, [citationText]));
+    wrap.appendChild(citationCard);
 
-          {/* Name */}
-          <h1 className="animate d2" style={{
-            fontFamily: 'var(--serif)',
-            fontSize: 'clamp(2.8rem, 7vw, 5rem)',
-            fontWeight: 300,
-            letterSpacing: '0.04em',
-            color: '#ffffff',
-            margin: '0 0 0.3rem',
-            lineHeight: 1.1,
-          }}>
-            Jessica Douthit
-          </h1>
+    var pdfWrap = el("div", { class: "animate d4", style: "max-width:840px;margin:0 auto;" });
+    pdfWrap.appendChild(el("div", { class: "sl", style: "margin-bottom:1rem;" }, ["Full Paper"]));
+    var frame = el("div", { style: "border:0.5px solid var(--border);border-radius:4px;overflow:hidden;background:rgba(0,0,0,0.3);" });
+    var iframe = el("iframe", { src: pdfSrc, title: "Publication PDF", width: "100%", height: "700px", style: "display:block;border:none;" });
+    frame.appendChild(iframe);
+    pdfWrap.appendChild(frame);
 
-          {/* Title */}
-          <div className="animate d3" style={{
-            fontFamily: 'var(--mono)',
-            fontSize: 'clamp(0.85rem, 1.8vw, 1rem)',
-            letterSpacing: '0.22em',
-            textTransform: 'uppercase',
-            color: 'rgba(255,255,255,0.85)',
-            marginBottom: '2rem',
-          }}>
-            Data Analyst &amp; Software Engineer
-          </div>
+    var dlWrap = el("div", { style: "margin-top:1rem;text-align:center;" });
+    dlWrap.appendChild(el("a", { class: "link-btn", href: pdfSrc, download: "", style: "display:inline-block;" }, ["\u2193 Download PDF"]));
+    pdfWrap.appendChild(dlWrap);
 
-          {/* Subtitle lines */}
-          <div className="animate d4" style={{
-            fontFamily: 'var(--serif)',
-            fontStyle: 'italic',
-            fontSize: 'clamp(1.05rem, 2.2vw, 1.3rem)',
-            fontWeight: 300,
-            color: 'rgba(255,255,255,0.75)',
-            marginBottom: '0.4rem',
-          }}>
-            Currently pursuing a M.S. in Cybersecurity at Johns Hopkins Whiting School of Engineering
-          </div>
+    wrap.appendChild(pdfWrap);
+    return wrap;
+  }
 
-          {/* NEW: APL intern line */}
-          <div className="animate d4" style={{
-            fontFamily: 'var(--serif)',
-            fontStyle: 'italic',
-            fontSize: 'clamp(1.05rem, 2.2vw, 1.3rem)',
-            fontWeight: 300,
-            color: 'rgba(255,255,255,0.75)',
-            marginBottom: '0.5rem',
-          }}>
-            Technical Aide at Johns Hopkins Applied Physics Laboratory
-          </div>
+  /* ---------------------------------------------------------------- */
+  /* Render dispatch                                                    */
+  /* ---------------------------------------------------------------- */
 
-          <div className="animate d5" style={{
-            fontFamily: 'var(--mono)',
-            fontSize: 'clamp(0.75rem, 1.2vw, 0.85rem)',
-            letterSpacing: '0.28em',
-            textTransform: 'uppercase',
-            color: '#ffffff',
-            marginBottom: '3.5rem',
-          }}>
-            Portfolio
-          </div>
+  function render() {
+    appRoot.innerHTML = "";
+    var p = state.path;
+    var view;
 
-          {/* Nav tiles */}
-          <div className="home-grid animate d6">
-            {["Experience", "Projects", "Background & Education", "Publications"].map(label => (
-              <div
-                key={label}
-                className="nav-tile"
-                onClick={() => setView(label.toLowerCase())}
-              >
-                {label}
-              </div>
-            ))}
-          </div>
+    if (p.length === 0) view = renderHome();
+    else if (p[0] === "experience") view = renderExperience();
+    else if (p[0] === "background") view = renderBackground();
+    else if (p[0] === "publications") view = renderPublications();
+    else if (p[0] === "projects") {
+      if (p[1] === "dataManager") view = renderDataManagerProjects();
+      else if (p[1] === "personal") view = renderPersonalProjects();
+      else view = renderProjectsMain();
+    } else view = renderHome();
 
-          {/* Bottom rule */}
-          <div className="animate d6" style={{ width: '40px', height: '1px', background: 'var(--border)', marginTop: '3.5rem' }}></div>
-        </div>
-      );
-    }
+    appRoot.appendChild(view);
+  }
 
-    ReactDOM.createRoot(document.getElementById("app-root")).render(<App />);
-  </script>
+  render();
+})();
+</script>
 </body>
 </html>
